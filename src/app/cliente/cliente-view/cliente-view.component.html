@@ -1,0 +1,124 @@
+<div class="pagetitle">
+    <h1 class="mt-4">Visualizar</h1>
+    <nav>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Cliente</li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard">
+    <div class="row">
+        <table class="table table-sm table-stripped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Endereço</th>
+                    <th>Contato</th>
+                    <th>NIF</th>
+                </tr>
+            </thead>
+            <tbody style="border-collapse: separate !important; border-spacing:0 20px !important;">
+                <tr style="border-collapse:separate; border-spacing:5em;">
+                    <td style="cursor: pointer;">{{cliente.nome}}</td>
+                    <td style="cursor: pointer;">{{cliente.endereco}}</td>
+                    <td style="cursor: pointer;">{{cliente.telefone}}</td>
+                    <td style="cursor: pointer;">{{cliente.nif}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="border border-secondary rounded bg-light" style="width: 100%;">
+            <table style="width: 100%;">
+                <tr>
+                    <td colspan="5">
+                        <table style="width: 100%; font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" class="text-dark h6" style="text-align: center;">Orçamentos</th>
+                                </tr>
+                                <tr>
+                                    <th>Número Pedido</th>
+                                    <th>Data Pedido</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Itens do Pedido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let pedido of cliente.pedidos">
+                                    <tr>
+                                        <td>{{pedido.numeroPedido}}</td>
+                                        <td>{{pedido.dataPedido  | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="text-center">{{pedido.status}}</td>
+                                        <td class="text-center">
+                                            <button (click)="changePedido(pedido)" >
+                                                <i class="fa fa-list-ol"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <ng-container *ngIf="pedido.expanded">
+                                        <tr>
+                                            <td colspan="6">
+                                                <table style="width: 100%; font-size: 11px;" class="table table-light table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="9" class="text-dark h6" style="text-align: center;">Itens do Pedido</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Produto</th>
+                                                            <th>Custo</th>
+                                                            <th>Quantidade</th>
+                                                            <th>Valor Unitário</th>
+                                                            <th>Custo Total</th>
+                                                            <th>Valor Total</th>
+                                                            <th>Valor Total c/ IVA</th>
+                                                            <th>Lucro</th>
+                                                            <th>%</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let item of pedido.itensPedido">
+                                                            <td>{{item.produto}}</td>
+                                                            <td>€ {{item.custo | currency}}</td>
+                                                            <td>{{item.quantidade}}</td>
+                                                            <td>€ {{item.valorUnitario | currency}}</td>
+                                                            <td>€ {{item.custoTotal | currency}}</td>
+                                                            <td>€ {{item.valorTotal | currency}}</td>
+                                                            <td>€ {{item.valorTotal*1.23 | currency}}</td>
+                                                            <td>€ {{item.valorTotal - item.custoTotal | currency}}</td>
+                                                            <td>{{((item.valorTotal / item.custoTotal)-1) * 100 | currency}}% </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <tr style="min-height: 15px; height: 15px;">
+                                        <td></td>
+                                    </tr>
+                                    <tr style="text-align: right;">
+                                        <td colspan="4" style="padding-right: 25px;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="width: 85%; font-weight: bold;">Valor Total</td>
+                                                    <td>{{pedido.valorTotal | currency }}€</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 85%; font-weight: bold;">Valor Total c/ IVA</td>
+                                                    <td>{{pedido.valorTotal*1.23 | currency }}€</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 85%; font-weight: bold;">Download Orçamento</td>
+                                                    <td>download</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>

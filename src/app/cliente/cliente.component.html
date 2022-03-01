@@ -1,0 +1,80 @@
+<div class="pagetitle">
+    <h1 class="mt-4">Movimentação</h1>
+    <nav>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Clientes</li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard">
+    <div class="row">
+        <table>
+            <tr>
+                <td>Cliente</td>
+                <td>Endereço</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="form-control" [(ngModel)]="cliente.nome" name="nome"/></td>
+                <td><input type="text" class="form-control" [(ngModel)]="cliente.endereco" name="endereco"/></td>
+                <td>
+                    <button type="submit" class="btn bg-secondary text-light" (click)="search()">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-sm table-stripped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Endereço</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let cliente of clientes; let i = index;">
+                    <tr>
+                        <td (click)="changeCliente(cliente)" style="cursor: pointer;">{{cliente.nome}}</td>
+                        <td (click)="changeCliente(cliente)" style="cursor: pointer;">{{cliente.endereco}}</td>
+                        <td>
+                            <button class="btn bg-secondary text-light" (click)="view(cliente)">
+                                <i class="fas fa-search"></i>
+                                Visualizar
+                            </button>
+                        </td>
+                    </tr>
+                    <ng-container *ngIf="cliente.expanded">
+                        <tr>
+                            <td colspan="5">
+                                <table style="width: 100%; font-size: 11px;" class="table table-light table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text-dark h6" style="text-align: center;">Orçamentos</th>
+                                            <th>Download Orçamento</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Número Pedido</th>
+                                            <th>Data Pedido</th>
+                                            <th>Status</th>
+                                            <th>Valor Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let pedido of cliente.pedidos" >
+                                        <td>{{pedido.numeroPedido}}</td>
+                                        <td>{{pedido.dataPedido  | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{pedido.estado}}</td>
+                                        <td>{{pedido.valorTotal | currency }}€</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>   
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,53 @@
+<aside id="sidebar" class="sidebar collapse show collapse-horizontal">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" routerLink="/home">
+                <i class="bi bi-menu-button-wide"></i><span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#movimentacao-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Movimentação</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="movimentacao-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link" routerLink="/cliente"><i class="fas fa-wallet" style="color:black !important; margin-right: 5px;"></i><span>Cliente</span></a>
+                </li>
+                <li>
+                    <a class="nav-link" routerLink="/nota"><i class="fas fa-receipt" style="color:black !important; margin-right: 5px;"></i>Orçamento</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#financeiro-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Financeiro</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="financeiro-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link" routerLink="/compra"><div class="sb-nav-link-icon"><i class="fas fa-shopping-basket" style="color:black !important; margin-right: 5px;"></i></div>Pagamento</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#relatorio-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Relatórios</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="relatorio-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link" routerLink="/relatorio/posicao-carteira-ano"><div class="sb-nav-link-icon"><i class="fas fa-table" style="color:black !important; margin-right: 5px;"></i></div>Vendas</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#config-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Configurações</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="config-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="nav-link" routerLink="/empresa/dados"><div class="sb-nav-link-icon"><i class="fas fa-cog" style="color:black !important; margin-right: 5px;"></i></div>Geral</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</aside>
