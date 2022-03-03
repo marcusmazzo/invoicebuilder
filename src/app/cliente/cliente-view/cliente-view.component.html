@@ -14,6 +14,7 @@
                     <th>Cliente</th>
                     <th>Endereço</th>
                     <th>Contato</th>
+                    <th>Email</th>
                     <th>NIF</th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                     <td style="cursor: pointer;">{{cliente.nome}}</td>
                     <td style="cursor: pointer;">{{cliente.endereco}}</td>
                     <td style="cursor: pointer;">{{cliente.telefone}}</td>
+                    <td style="cursor: pointer;">{{cliente.email}}</td>
                     <td style="cursor: pointer;">{{cliente.nif}}</td>
                 </tr>
             </tbody>
@@ -64,6 +66,7 @@
                                                         </tr>
                                                         <tr>
                                                             <th>Produto</th>
+                                                            <th>Dimensão</th>
                                                             <th>Custo</th>
                                                             <th>Quantidade</th>
                                                             <th>Valor Unitário</th>
@@ -77,14 +80,15 @@
                                                     <tbody>
                                                         <tr *ngFor="let item of pedido.itensPedido">
                                                             <td>{{item.produto}}</td>
-                                                            <td>€ {{item.custo | currency}}</td>
+                                                            <td>A: {{item.altura}} x L: {{item.largura}} </td>
+                                                            <td>€ {{item.custoFabricacao | currency}}</td>
                                                             <td>{{item.quantidade}}</td>
-                                                            <td>€ {{item.valorUnitario | currency}}</td>
-                                                            <td>€ {{item.custoTotal | currency}}</td>
-                                                            <td>€ {{item.valorTotal | currency}}</td>
-                                                            <td>€ {{item.valorTotal*1.23 | currency}}</td>
-                                                            <td>€ {{item.valorTotal - item.custoTotal | currency}}</td>
-                                                            <td>{{((item.valorTotal / item.custoTotal)-1) * 100 | currency}}% </td>
+                                                            <td>€ {{item.valorVenda | currency}}</td>
+                                                            <td>€ {{item.custoFabricacao * item.quantidade | currency}}</td>
+                                                            <td>€ {{item.totalItem | currency}}</td>
+                                                            <td>€ {{item.totalItem*1.23 | currency}}</td>
+                                                            <td>€ {{item.totalItem - (item.custoFabricacao*item.quantidade) | currency}}</td>
+                                                            <td>{{((item.totalItem / (item.custoFabricacao*item.quantidade))-1) * 100 | currency}}% </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

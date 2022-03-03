@@ -1,10 +1,10 @@
 export class Item {
 
     produto: String
-    custo: number
-    custoTotal: number
-    quantidade: number
-    valorUnitario: number
-    valorTotal: number
-
+    altura: number;
+    largura: number;
+    custoFabricacao: number;
+    valorVenda: number;
+    quantidade: number;
+    totalItem: number;
 }

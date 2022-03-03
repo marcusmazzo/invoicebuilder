@@ -10,10 +10,11 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateCustomParserFormatter } from '../datepicker/datepicker-adapter';
 import { ClienteViewComponent } from './cliente-view/cliente-view.component';
+import { ClienteFormComponent } from './cliente-form/cliente-form.component';
 
 
 @NgModule({
-  declarations: [ClienteComponent, ClienteViewComponent],
+  declarations: [ClienteComponent, ClienteViewComponent, ClienteFormComponent],
   imports: [
     CommonModule,
     ClienteRoutingModule,

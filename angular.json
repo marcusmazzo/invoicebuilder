@@ -26,12 +26,18 @@
                 "input": "node_modules/@fortawesome/fontawesome-free/webfonts",
                 "output": "assets/fonts/"
               },
+              {
+                "glob": "*",
+                "input": "node_modules/font-awesome/fonts",
+                "output": "assets/fonts/"
+              },
               "src/assets"
             ],
             "styles": [
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

@@ -6,6 +6,7 @@ export class Cliente {
     nif: String
     telefone: String
     pedidos: Pedido[]
+    email: String
     expanded: boolean
 
 }

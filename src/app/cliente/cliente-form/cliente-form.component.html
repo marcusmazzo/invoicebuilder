@@ -1,0 +1,243 @@
+<div class="pagetitle">
+    <h1 class="mt-4">Cliente</h1>
+    <nav>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Novo</li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard">
+    <table style="width: 100%; font-size: 12px  ;">
+        <tr>
+            <td style="vertical-align: top; width: 48%; padding-right: 2%;">
+                <div class="card shadow-lg border-0 rounded-lg mb-2">
+                    <div class="card-header bg-secondary" style="padding: 0px;">
+                        <h3 class="text-center font-weight-light text-light">Dados</h3>
+                    </div>
+                    <div class="card-body text-white bg-light">
+                        <form #clienteForm="ngForm">
+                            <div class="form-group">
+                                <label style="color: black;">Nome:</label>
+                                <input type="text" class="form-control" [(ngModel)]="cliente.nome" name="nome"/>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">NIF:</label>
+                                <input type="text" class="form-control" [(ngModel)]="cliente.nif" name="nif"/>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">Endereço:</label>
+                                <input type="text" class="form-control" name="endereco" [(ngModel)]="cliente.endereco"/>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label style="color: black;">Telefone:</label>
+                                <input type="text" class="form-control" name="telefone" [(ngModel)]="cliente.telefone"/>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label style="color: black;">Email:</label>
+                                <input type="email" class="form-control" name="email" [(ngModel)]="cliente.email"/>
+                            </div>
+                            <div class="form-group mb-1" style="min-height: 53px;">
+                            </div>
+                            <button type="button" class="btn btn-success">
+                                <i class="fas fa-save"></i>
+                                Enviar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: top; width: 48%; padding-right: 2%;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>
+                            <div class="card shadow-lg border-0 rounded-lg">
+                                <div class="card-header bg-secondary" style="padding: 0px;">
+                                    <h3 class="text-center font-weight-light text-light">Pedido</h3>
+                                </div>
+                                <div class="card-body text-white bg-light">
+                                    <div class="form-group">
+                                        <label style="color: black;">Número:</label>
+                                        <input type="text" class="form-control" [(ngModel)]="pedido.numeroPedido" name="numeroPedido" disabled/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="color: black;">Data do Pedido: </label>
+                                        <div class="input-group">
+                                            <input class="form-control" placeholder="dd/mm/yyyy" mask="0{2}/0{2}/0{4}" id="date"
+                                                    name="d2" #c2="ngModel" [(ngModel)]="dataPedido" ngbDatepicker #d2="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="card shadow-lg border-0 rounded-lg my-0 py-0">
+                                <div class="card-header bg-secondary" style="padding: 0px;">
+                                    <h3 class="text-center font-weight-light text-light">Itens Pedido</h3>
+                                </div>
+                            </div>
+                            <div class="card-body text-white bg-light pb-2">
+                                <table class="bg-light" style="width: 100%;" >
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Produto:</label>
+                                                <select class="form-control" id="produto" [(ngModel)]="produto" #mySelect name="produto" (ngModelChange)="onChange($event)">
+                                                    <option *ngFor="let produto of produtos" [ngValue]="produto">{{produto.descricao}}</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Quantidade:</label>
+                                                <input type="text" class="form-control" [(ngModel)]="item.quantidade" name="quantidade"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Valor Unitário:</label>
+                                                <input type="text" currencyMask class="form-control" [(ngModel)]="item.valorVenda" name="valorUnitario" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Custo Produto:</label>
+                                                <input type="text" currencyMask class="form-control" [(ngModel)]="item.custoFabricacao" name="custo" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Custo Total:</label>
+                                                <div class="form-control" aria-disabled="true">€{{item.custoFabricacao*item.quantidade | currency}}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Total Venda:</label>
+                                                <div class="form-control" aria-disabled="true">€{{item.valorVenda*item.quantidade | currency}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Altura:</label>
+                                                <input type="text" class="form-control" currencyMask [(ngModel)]="item.altura" name="altura" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label style="color: black;">Largura:</label>
+                                                <input type="text" class="form-control" currencyMask [(ngModel)]="item.largura" name="largura" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: bottom; text-align: center;">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-success" (click)="adicionarItem()">
+                                                    <i class="fas fa-save"></i>
+                                                    Adicionar Item
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top; width: 100%; padding-right: 2%;" colspan="2">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-secondary" style="padding: 0px;">
+                        <h3 class="text-center font-weight-light text-light">Dados do Pedido</h3>
+                    </div>
+                    <div class="card-body text-white bg-light">
+                        <table class="card-body text-white bg-light " style="width: 100%;">
+                            <tr>
+                                <td style="width: 80%; vertical-align: top;">
+                                    <div style="color: black; width: 100%; min-height: 60px; max-height: 60px; height: 60px; overflow: auto;">
+                                        <table style="color: black; width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                <th>Produto</th>
+                                                <th>Dimensão</th>
+                                                <th>Quantidade</th>
+                                                <th>Custo</th>
+                                                <th>Valor Venda</th>
+                                                <th>Custo Total</th>
+                                                <th>Total Venda</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of pedido.itensPedido">
+                                                    <td>{{item.produto}}</td>
+                                                    <td>A: {{item.altura}} x L: {{item.largura}} </td>
+                                                    <td>{{item.quantidade}}</td>
+                                                    <td>€ {{item.custoFabricacao | currency}}</td>
+                                                    <td>€ {{item.valorVenda | currency}}</td>
+                                                    <td>€ {{item.custoFabricacao * item.quantidade | currency}}</td>
+                                                    <td>€ {{item.valorVenda * item.quantidade | currency}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <table style="color: black; width: 100%;">
+                                        <tr>
+                                            <td>
+                                                Quantidade Itens
+                                            </td>
+                                            <td>
+                                                {{pedido.itensPedido.length || 0}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Valor Total Pedido
+                                            </td>
+                                            <td>
+                                                € {{pedido.valorTotal | currency}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Valor Total Pedido c/ IVA
+                                            </td>
+                                            <td>
+                                                € {{pedido.valorTotal * 1.23 | currency}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-right: 2%;">
+                <button type="button" class="btn btn-success" style="width: 100%;" (click)="save()">
+                    <i class="fas fa-save"></i>
+                    Salvar Pedido
+                </button>
+            </td>
+        </tr>
+    </table>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="loading" style="width: 100%; position: absolute; display: none; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999999; cursor: pointer;">
+        <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>    
+</section>

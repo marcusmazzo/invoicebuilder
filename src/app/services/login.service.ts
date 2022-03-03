@@ -14,13 +14,13 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   authenticate(user:User): Observable<Authentication> {
-    return this.http.post<Authentication>("http://192.168.1.69:8090/invoice/login", user);
+    return this.http.post<Authentication>("http://localhost:8090/invoice/login", user);
   }
 
   refreshToken(): Observable<Authentication> {
     console.log("refreshToken");
     
-    const url = 'http://192.168.1.69:8090/invoice/refreshToken';
+    const url = 'http://localhost:8090/invoice/refreshToken';
 
     const refreshToken = localStorage.getItem('refreshToken');
 
