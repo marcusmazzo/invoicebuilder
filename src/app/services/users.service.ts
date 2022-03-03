@@ -14,7 +14,7 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   criarConta(user:User): Observable<User> {
-    return this.http.post<User>("http://192.168.1.69:8090/invoice/save", user);
+    return this.http.post<User>("http://localhost:8090/invoice/save", user);
   }
 
 }

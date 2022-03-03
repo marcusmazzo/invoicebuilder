@@ -14,18 +14,18 @@ export class EmpresaService {
    }
 
    findByToken() : Observable<Empresa> {
-      return this.http.get<Empresa>("http://192.168.1.69:8090/invoice/empresa/user");
+      return this.http.get<Empresa>("http://localhost:8090/invoice/empresa/user");
     }
 
   save(empresa:Empresa) : Observable<Empresa> {
-    return this.http.post<Empresa>("http://192.168.1.69:8090/invoice/empresa/salvar", empresa);
+    return this.http.post<Empresa>("http://localhost:8090/invoice/empresa/salvar", empresa);
   }
 
   upload(files: FileList) : Observable<HttpEvent<any>>{
     const formData: FormData = new FormData();
     formData.append('files', files[0]);
 
-    const req = this.http.post("http://192.168.1.69:8090/invoice/empresa/logotipo", formData, {
+    const req = this.http.post("http://localhost:8090/invoice/empresa/logotipo", formData, {
       reportProgress: true,
       observe: 'events',
       responseType: 'json'
