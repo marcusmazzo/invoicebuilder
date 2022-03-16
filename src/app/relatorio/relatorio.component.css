@@ -1,0 +1,10 @@
+@media screen {
+  :host {
+    display: none;
+  }
+}
+
+@media print {
+    app-root > * { display: none; }
+    app-root app-relatorio app-relatorio-header{ display: block; }
+  }

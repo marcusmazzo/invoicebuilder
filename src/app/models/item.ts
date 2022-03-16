@@ -1,6 +1,7 @@
 export class Item {
 
-    produto: String
+    produto: String;
+    descricaoProduto: String;
     altura: number;
     largura: number;
     custoFabricacao: number;

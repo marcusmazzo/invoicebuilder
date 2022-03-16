@@ -16,6 +16,11 @@ import { LayoutComponent } from './layout/layout.component';
 import { EmpresaModule } from './empresa/empresa.module';
 import { ClienteModule } from './cliente/cliente.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProdutoModule } from './produto/produto.module';
+import { AuthGuard } from './guards/authguard';
+import { ClienteGuard } from './guards/clienteguard';
+import { RelatorioModule } from './relatorio/relatorio.module';
+import { CaixaModule } from './caixa/caixa.module';
 
 @NgModule({
   declarations: [
@@ -32,12 +37,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     EmpresaModule,
     ClienteModule,
+    ProdutoModule,
+    RelatorioModule,
+    CaixaModule,
     TemplateModule
   ],
   providers: [
     EmpresaService,
     UsersService,
     LoginService,
+    AuthGuard,
+    ClienteGuard,
     { provide: LOCALE_ID, useValue: 'pt'}
   ],
   bootstrap: [AppComponent]

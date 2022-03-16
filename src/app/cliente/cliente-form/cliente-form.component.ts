@@ -8,6 +8,8 @@ import { Produto } from 'src/app/models/produto';
 import { Item } from 'src/app/models/item';
 import { ClienteService } from 'src/app/services/cliente.service';
 import { Router } from '@angular/router';
+import { ProdutoService } from 'src/app/services/produto.service';
+import { Message } from 'src/app/models/message';
 
 @Component({
   selector: 'app-cliente-form',
@@ -23,23 +25,34 @@ export class ClienteFormComponent implements OnInit {
   produtos: Produto[];
   produto: Produto;
   item: Item;
+  messages: Message[];
 
-  constructor(private service: ClienteService, private route: Router) { }
+  constructor(private service: ClienteService, private produtoService: ProdutoService, private route: Router) { }
 
   ngOnInit(): void {
+    this.messages = [];
     this.loading = true;
-    this.cliente = new Cliente();
+
+    if(this.service.getIsNew()) {
+      this.cliente = new Cliente();
+      this.cliente.pedidos = []
+    } else {
+      this.cliente = this.service.getCliente();
+    }
+
     this.pedido = new Pedido();
+    this.pedido.cliente = this.cliente;
     this.pedido.valorTotal = 0;
+    this.pedido.itens = [];
+
     this.item = new Item();
     this.produto = new Produto();
-    this.produtos = [];
 
-    this.cliente.pedidos = []
-    this.pedido.itensPedido = [];
-
-    this.loading = false;
-    this.createItens();
+    this.produtoService.findAll().subscribe(response => {
+      this.produtos = response
+      this.loading = false;
+      }
+    );
   }
 
   ngAfterViewInit() {
@@ -53,8 +66,9 @@ export class ClienteFormComponent implements OnInit {
 
   adicionarItem(){
     this.item.produto = this.produto.descricao;
+    this.item.descricaoProduto = this.produto.descricaoCompleta;
     this.item.totalItem = this.item.valorVenda * this.item.quantidade;
-    this.pedido.itensPedido.push(this.item);
+    this.pedido.itens.push(this.item);
     this.pedido.valorTotal = this.pedido.valorTotal + this.item.totalItem;
 
     this.item = new Item();
@@ -62,29 +76,63 @@ export class ClienteFormComponent implements OnInit {
   }
 
   save(){
-    if(this.dataPedido == null) {
-      this.dataPedido = new NgbDate(1980, 1, 1);
+
+    this.validateInput();
+
+    let rota: String = "cliente";
+    if(this.cliente.id != null){
+      rota = "cliente/view"
     }
-    this.pedido.dataPedido = new Date(this.dataPedido.day + "-" + this.dataPedido.month + "-"+this.dataPedido.year);
-    this.pedido.numeroPedido = "1/2022";
-    this.pedido.status = "NOVO"
-    this.cliente.pedidos.push(this.pedido);
-    this.service.save(this.cliente);
-    this.route.navigate(['cliente']).then(_ => null);
+
+    if(this.dataPedido == null) {
+     this.pedido.dataPedido = new Date();
+    } else {
+      this.pedido.dataPedido = new Date(this.dataPedido.month + "-" + this.dataPedido.day + "-"+this.dataPedido.year);
+    }
+
+    console.log(this.pedido);
+    
+
+    this.service.salvarPedido(this.pedido).subscribe( response =>
+      this.route.navigate([rota]).then(_ => null)
+    );
   }
 
-  createItens(){
-    let produto: Produto = new Produto();
-    produto.descricao = "Janela Dupla folha";
-    produto.custoMedio = 35
+  validateInput() {
+    if(this.pedido.itens == null || this.pedido.itens.length == 0){
+      let message = new Message();
+      message = new Message();
+      message.message = "É necessário adicionar ao menos um item ao pedido";
+      message.typeError = true;
+      this.messages.push(message);
+    }
 
-    let produto1: Produto = new Produto();
-    produto1.descricao = "Porta Dupla folha";
-    produto1.custoMedio = 85;
+    if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.nome == null || this.pedido.cliente.nome == undefined){
+      let message = new Message();
+      message = new Message();
+      message.message = "É necessário informar o nome do Cliente";
+      message.typeError = true;
+      this.messages.push(message);
+    }
+
+    if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.contato == null || this.pedido.cliente.contato == undefined){
+      let message = new Message();
+      message = new Message();
+      message.message = "É necessário informar o contacto do Cliente";
+      message.typeError = true;
+      this.messages.push(message);
+    }
     
-    
-    this.produtos.push(produto);
-    this.produtos.push(produto1);
+    if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.endereco == null || this.pedido.cliente.endereco == undefined){
+      let message = new Message();
+      message = new Message();
+      message.message = "É necessário informar o Endereço do Cliente";
+      message.typeError = true;
+      this.messages.push(message);
+    }
+
+    if(this.messages.length > 0) {
+      throw new Error();
+    }
   }
-
 }

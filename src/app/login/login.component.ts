@@ -35,6 +35,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('refreshToken', this.auth.refreshToken);
         localStorage.setItem('accessToken', this.auth.accessToken);
         this.empresaService.findByToken().subscribe( response => {
+          console.log(response);
+          
           localStorage.setItem("empresa", JSON.stringify(response));
           this.router.navigate(["/home"]);
         });

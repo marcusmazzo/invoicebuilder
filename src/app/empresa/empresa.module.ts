@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { TokenInterceptor } from '../tokeninterceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EmpresaComponent } from './empresa.component';
-import { AngularEditorModule } from '@kolkov/angular-editor';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     EmpresaRoutingModule,
     UsersModule,
     FormsModule,
-    AngularEditorModule
+    CurrencyMaskModule,
+    CKEditorModule 
   ],
   exports: [
     EmpresaFormComponent

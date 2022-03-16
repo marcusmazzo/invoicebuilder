@@ -3,5 +3,6 @@ export class Produto {
     descricao: String;
     tipoProduto: String;
     custoMedio: number;
+    descricaoCompleta: String
 
 }

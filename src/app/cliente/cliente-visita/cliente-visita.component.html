@@ -1,0 +1,136 @@
+<div class="pagetitle" *ngIf="nonModal">
+    <h1 class="mt-4">Cliente</h1>
+    <nav>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active" style="margin-right:auto">Visitas</li>
+            <li class="pull-right">
+                <button type="button" class="btn bg-success" style="color: white" (click)="new()" *ngIf="listar">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Novo
+                </button>
+                <button type="button" class="btn bg-danger" style="color: white" (click)="cancelar()" *ngIf="!listar">
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+            </li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard" >
+<div *ngIf="listar && nonModal">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>
+                    Cliente
+                </th>
+                <th style="text-align: center;">
+                    Telefone
+                </th>
+                <th>
+                    Endereço
+                </th>
+                <th style="text-align: center;">
+                    Data
+                </th>
+                <th style="text-align: center;">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let visita of visitas">
+                <td style="vertical-align: middle;">{{visita.cliente.nome}}</td>
+                <td style="vertical-align: middle; text-align: center;">{{visita.cliente.contato}}</td>
+                <td style="vertical-align: middle;">{{visita.cliente.endereco}}</td>
+                <td style="vertical-align: middle; text-align: center;">{{visita.dataVisita | date: 'dd/MM/yyyy'}}</td>
+                <td style="vertical-align: middle; text-align: center;">{{visita.statusVisita}}</td>
+                <td style="text-align: left; width: 17%;">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="showVisita(visita)" style="margin-right: 2px;">
+                        <i class="fas fa-ban" title="Cancelar Visita"></i>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" (click)="showVisita(visita)">
+                        <i class="fas fa-check" title="Confirmar Visita"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="!listar">
+    <div class="row" style="margin-left: 0%;" *ngIf="nonModal">
+        <table>
+            <tr>
+                <td>Telefone</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="form-control" [(ngModel)]="telefone" name="telefone"/></td>
+                <td>
+                    <button type="submit" class="btn bg-secondary text-light" (click)="search()">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table style="width: 100%; font-size: 12px; " [ngStyle]="{'visibility': (searched) ? 'visible' : 'hidden'}">
+        <tr>
+            <td style="vertical-align: top; width: 48%; padding-right: 2%;">
+                <div class="card shadow-lg border-0 rounded-lg mb-2">
+                    <div class="card-header bg-secondary" style="padding: 0px;">
+                        <h3 class="text-center font-weight-light text-light">Dados</h3>
+                    </div>
+                    <div class="card-body text-white bg-light">
+                        <form #clienteForm="ngForm">
+                            <div class="form-group">
+                                <label style="color: black;">Nome:</label>
+                                <input type="text" class="form-control" [(ngModel)]="visita.cliente.nome" name="nome" [disabled]="!searched || !nonModal"/>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">Endereço:</label>
+                                <input type="text" class="form-control" name="endereco" [(ngModel)]="visita.cliente.endereco"  [disabled]="!searched || !nonModal"/>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label style="color: black;">Telefone:</label>
+                                <input type="text" class="form-control" name="telefone" [(ngModel)]="visita.cliente.contato"  [disabled]="!searched || !nonModal"/>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">Data do Pedido: </label>
+                                <div class="input-group">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" mask="0{2}/0{2}/0{4}" id="date"
+                                            name="d2" #c2="ngModel" [(ngModel)]="dataAgendamento" ngbDatepicker #d2="ngbDatepicker"  [disabled]="!searched || !nonModal">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"  [disabled]="!searched || !nonModal">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="!nonModal">
+                                <label style="color: black;">Status da Visita:</label>
+                                <select class="form-control" id="corretora" [(ngModel)]="visita.statusVisita" name="statusVisita" [disabled]="!nonModal">
+                                    <option *ngFor="let status of statusVisita" value="{{status}}">{{status}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-1" style="min-height: 53px;">
+                            </div>
+                            <button type="button" class="btn btn-success" (click)="save()" [disabled]="!searched" *ngIf="nonModal">
+                                <i class="fas fa-save"></i>
+                                Agendar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>        
+    <div class="d-flex justify-content-center align-items-center" *ngIf="loading && nonModal" style="width: 100%; position: absolute; display: none; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999999; cursor: pointer;">
+        <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>    
+</section>

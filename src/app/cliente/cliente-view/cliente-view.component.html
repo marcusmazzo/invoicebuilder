@@ -20,22 +20,42 @@
             </thead>
             <tbody style="border-collapse: separate !important; border-spacing:0 20px !important;">
                 <tr style="border-collapse:separate; border-spacing:5em;">
-                    <td style="cursor: pointer;">{{cliente.nome}}</td>
-                    <td style="cursor: pointer;">{{cliente.endereco}}</td>
-                    <td style="cursor: pointer;">{{cliente.telefone}}</td>
-                    <td style="cursor: pointer;">{{cliente.email}}</td>
-                    <td style="cursor: pointer;">{{cliente.nif}}</td>
+                    <td style="cursor: pointer; width: 20%;">{{cliente.nome}}</td>
+                    <td style="cursor: pointer; width: 30%;">
+                        <input type="text" class="form-control" [(ngModel)]="cliente.endereco" name="endereco"/>
+                    </td>
+                    <td style="cursor: pointer; width: 10%;">
+                        <input type="text" class="form-control" [(ngModel)]="cliente.contato" name="contato"/>
+                    </td>
+                    <td style="cursor: pointer; width: 20%;">
+                        <input type="text" class="form-control" [(ngModel)]="cliente.email" name="email"/>
+                    </td>
+                    <td style="cursor: pointer; width: 10%;">
+                        <input type="text" class="form-control" [(ngModel)]="cliente.docIdentificacao" name="nif"/>
+                    </td>
+                    <td style="cursor: pointer; width: 10%; text-align: right;">
+                        <button type="button" class="btn bg-warning" (click)="update(cliente)">
+                            <i class="fa fa-pen" aria-hidden="true"></i>
+                            Atualizar
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <div class="border border-secondary rounded bg-light" style="width: 100%;">
-            <table style="width: 100%;">
-                <tr>
-                    <td colspan="5">
+        <table style="width: 100%;">
+            <tr>
+                <td colspan="5">
+                    <div style="max-height: 300px; height: 300px; overflow: auto;">
                         <table style="width: 100%; font-size: 11px;">
                             <thead>
-                                <tr>
-                                    <th colspan="6" class="text-dark h6" style="text-align: center;">Orçamentos</th>
+                                <tr class="bg-secondary">
+                                    <th colspan="5" class="text-dark h6" style="text-align: center; color: white !important;">Orçamentos</th>
+                                    <th colspan="1" class="text-dark h6" style="text-align: right; padding-right: 5px;">
+                                        <button type="button" class="btn bg-success" style="color: white" (click)="new()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            Novo
+                                        </button>
+                                    </th>
                                 </tr>
                                 <tr>
                                     <th>Número Pedido</th>
@@ -46,10 +66,10 @@
                             </thead>
                             <tbody>
                                 <ng-container *ngFor="let pedido of cliente.pedidos">
-                                    <tr>
+                                    <tr style="margin-top: 2px;">
                                         <td>{{pedido.numeroPedido}}</td>
                                         <td>{{pedido.dataPedido  | date: 'dd/MM/yyyy'}}</td>
-                                        <td class="text-center">{{pedido.status}}</td>
+                                        <td class="text-center">{{pedido.estadoPedido}}</td>
                                         <td class="text-center">
                                             <button (click)="changePedido(pedido)" >
                                                 <i class="fa fa-list-ol"></i>
@@ -62,7 +82,7 @@
                                                 <table style="width: 100%; font-size: 11px;" class="table table-light table-sm">
                                                     <thead>
                                                         <tr>
-                                                            <th colspan="9" class="text-dark h6" style="text-align: center;">Itens do Pedido</th>
+                                                            <th colspan="10" class="text-dark h6" style="text-align: center;">Itens do Pedido</th>
                                                         </tr>
                                                         <tr>
                                                             <th>Produto</th>
@@ -78,7 +98,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr *ngFor="let item of pedido.itensPedido">
+                                                        <tr *ngFor="let item of pedido.itens">
                                                             <td>{{item.produto}}</td>
                                                             <td>A: {{item.altura}} x L: {{item.largura}} </td>
                                                             <td>€ {{item.custoFabricacao | currency}}</td>
@@ -98,20 +118,22 @@
                                     <tr style="min-height: 15px; height: 15px;">
                                         <td></td>
                                     </tr>
-                                    <tr style="text-align: right;">
+                                    <tr style="text-align: right;  border-bottom: 1px solid black;">
                                         <td colspan="4" style="padding-right: 25px;">
                                             <table style="width: 100%;">
                                                 <tr>
                                                     <td style="width: 85%; font-weight: bold;">Valor Total</td>
-                                                    <td>{{pedido.valorTotal | currency }}€</td>
+                                                    <td>{{pedido.valorTotalPedido | currency }}€</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 85%; font-weight: bold;">Valor Total c/ IVA</td>
-                                                    <td>{{pedido.valorTotal*1.23 | currency }}€</td>
+                                                    <td>{{pedido.valorTotalPedido*(1+(pedido.empresa.percentualIva/100)) | currency }}€</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 85%; font-weight: bold;">Download Orçamento</td>
-                                                    <td>download</td>
+                                                    <td><button (click)="download(pedido.id)">
+                                                        <i class="fa fa-download" aria-hidden="true"></i>
+                                                    </button></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -120,9 +142,9 @@
                                 </ng-container>
                             </tbody>
                         </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </section>

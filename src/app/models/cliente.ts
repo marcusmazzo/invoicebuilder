@@ -1,12 +1,15 @@
+import { Empresa } from "./empresa"
 import { Pedido } from "./pedido"
 
 export class Cliente {
+    id: number
     nome: String
     endereco: String
-    nif: String
-    telefone: String
+    docIdentificacao: String
+    contato: String
     pedidos: Pedido[]
     email: String
     expanded: boolean
+    empresa: Empresa
 
 }

@@ -1072,3 +1072,24 @@
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
   }
+
+  @media print {
+    .header {
+      position: fixed;
+      display: block;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100px;
+    }
+    
+    .footer {
+      position: fixed; 
+      bottom: 0; 
+      height: 50px;
+      min-height: 50px;
+      width: 100%;
+    }
+
+  }

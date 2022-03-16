@@ -11,6 +11,10 @@ export class Empresa{
     logotipoBase64: String
     informacoes: String
     email: String
+    prazoMedioEntrega: number
+    percentualLucro: number
+    percentualIva: number
+    iban: string
     
 
     constructor(

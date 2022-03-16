@@ -2,13 +2,19 @@
     <h1 class="mt-4">Dashboard</h1>
     <nav>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
+            <li class="breadcrumb-item active" style="margin-right:auto">Dashboard</li>
+            <li class="pull-right">
+                <a class="btn bg-success" style="color: white" routerLink="/cliente/visita">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Agendar Visita
+                </a>
+            </li>
         </ol>
     </nav>
 </div>
 <section class="section dashboard">
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="card shadow-lg border-0 rounded-lg mb-5" style="min-height: 600px; max-height: 600px; overflow-x: auto;">
             <div class="card-header bg-secondary" style="padding: 0px;">
                 <h3 class="text-center font-weight-light text-light">Orçamentos</h3>
@@ -23,18 +29,71 @@
                             <th style="text-align: center;">
                                 Nº Orçamento
                             </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pedido of pedidos">
+                            <td>{{pedido.cliente.nome}}</td>
+                            <td>{{pedido.numeroPedido}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0 rounded-lg mb-5" style="min-height: 600px; max-height: 600px; overflow-x: auto;">
+            <div class="card-header bg-secondary" style="padding: 0px;">
+                <h3 class="text-center font-weight-light text-light">Visitas</h3>
+            </div>
+            <div class="card-body text-white bg-light mb-3" style="min-height: 200px; height: 200px; overflow:auto; width: 100%; font-size: 12px;" >
+                <table class="table table-striped table-sm" style="cursor: pointer;">
+                    <thead>
+                        <tr>
+                            <th>
+                                Cliente
+                            </th>
                             <th style="text-align: center;">
-                                Status Pedido
+                                Telefone
+                            </th>
+                            <th>
+                                Endereço
+                            </th>
+                            <th style="text-align: center;">
+                                Data
+                            </th>
+                            <th style="text-align: center;">
+                                Status
                             </th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr *ngFor="let visita of visitas">
+                            <td style="vertical-align: middle;">{{visita.cliente.nome}}</td>
+                            <td style="vertical-align: middle; text-align: center;">{{visita.cliente.contato}}</td>
+                            <td style="vertical-align: middle;">{{visita.cliente.endereco}}</td>
+                            <td style="vertical-align: middle; text-align: center;">{{visita.dataVisita | date: 'dd/MM/yyyy'}}</td>
+                            <td style="vertical-align: middle; text-align: center;">{{visita.statusVisita}}</td>
+                            <td style="text-align: left; width: 17%;">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#simularModal" (click)="showVisita(visita)" style="margin-right: 2px;">
+                                    <i class="fas fa-eye" title="Visualizar"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" (click)="showVisita(visita)" style="margin-right: 2px;">
+                                    <i class="fas fa-ban" title="Cancelar Visita"></i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm" (click)="showVisita(visita)">
+                                    <i class="fas fa-check" title="Confirmar Visita"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
                     
                     
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="card shadow-lg border-0 rounded-lg mb-5" style="min-height: 600px; max-height: 600px;">
             <div class="card-header bg-secondary" style="padding: 0px;">
                 <h3 class="text-center font-weight-light text-light">Vendas</h3>
@@ -74,6 +133,23 @@
         <span class="visually-hidden">Loading...</span>
     </div>
 </div>
+
+<div class="modal fade" id="simularModal" tabindex="-1" role="dialog" aria-labelledby="simularModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Visita</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <app-cliente-visita [visita]="visita" [searched]="searchedVisita" [nonModal]="nonModalVisita" [dataAgendamento]="dataVisita" [listar]="listar"></app-cliente-visita>
+            </div>
+        </div>
+    </div>
+</div>
+
 </section>
         
         

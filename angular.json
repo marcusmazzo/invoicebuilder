@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "jquery",
+              "jquery-mask-plugin"
+            ],
             "outputPath": "dist/invoice-win",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -26,23 +30,17 @@
                 "input": "node_modules/@fortawesome/fontawesome-free/webfonts",
                 "output": "assets/fonts/"
               },
-              {
-                "glob": "*",
-                "input": "node_modules/font-awesome/fonts",
-                "output": "assets/fonts/"
-              },
               "src/assets"
             ],
             "styles": [
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
-              "node_modules/@fortawesome/fontawesome-free/js/all.js"
+              "node_modules/@fortawesome/fontawesome-free/js/all.min.js"
             ]
           },
           "configurations": {
@@ -78,7 +76,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "invoice-win:build"
+            "browserTarget": "invoice-win:build",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {

@@ -16,17 +16,21 @@
                     </div>
                     <div class="card-body text-white bg-light">
                         <form #clienteForm="ngForm" (ngSubmit)="onSubmit()">
-                            <div class="form-group">
+                            <div class="form-group was-validated">
                                 <label style="color: black;">Nome:</label>
-                                <input type="text" class="form-control" [(ngModel)]="empresa.nome" name="nome"/>
+                                <input type="text" class="form-control" [(ngModel)]="empresa.nome" name="nome" required/>
                             </div>
                             <div class="form-group">
                                 <label style="color: black;">NIPC:</label>
-                                <input type="text" class="form-control" [(ngModel)]="empresa.nipc" name="npic"/>
+                                <input type="text" class="form-control" [(ngModel)]="empresa.nipc" name="npic" required/>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">IBAN:</label>
+                                <input type="text" class="form-control" [(ngModel)]="empresa.iban" name="iban" required/>
                             </div>
                             <div class="form-group">
                                 <label style="color: black;">Usuário: *</label>
-                                <input type="text" class="form-control" name="usuario" [(ngModel)]="empresa.user.username" autocomplete="username"/>
+                                <input type="text" class="form-control" name="usuario" [(ngModel)]="empresa.user.username" autocomplete="username" required/>
                             </div>
                             <div class="form-group mb-1">
                                 <label style="color: black;">Senha: *</label>
@@ -45,17 +49,17 @@
                     </div>
                     <div class="card-body text-white bg-light" >
                         <form #clienteForm="ngForm" (ngSubmit)="onSubmit()">
-                            <div class="form-group">
+                            <div class="form-group was-validated">
                                 <label style="color: black;">Endereço:</label>
-                                <input type="text" class="form-control" [(ngModel)]="contato.endereco" name="endereco"/>
+                                <input type="text" class="form-control" [(ngModel)]="contato.endereco" name="endereco" required/>
                             </div>
                             <div class="form-group">
                                 <label style="color: black;">Telefone:</label>
-                                <input type="text" class="form-control" name="telefone" [(ngModel)]="contato.telefone" />
+                                <input type="text" class="form-control" name="telefone" [(ngModel)]="contato.telefone" required/>
                             </div>
                             <div class="form-group mb-1">
                                 <label style="color: black;">Email:</label>
-                                <input type="email" class="form-control" name="email" [(ngModel)]="contato.email" />
+                                <input type="email" class="form-control" name="email" [(ngModel)]="contato.email" required/>
                             </div>
                                 <button type="submit" class="btn btn-success" (click)="saveContato()">
                                     <i class="fas fa-save"></i>
@@ -93,21 +97,165 @@
                         </table>
                     </div>
                 </div>
-                <div class="card shadow-lg border-0 rounded-lg mb-5">
+                <div class="card shadow-lg border-0 rounded-lg">
                     <div class="card-header bg-secondary" style="padding: 0px;">
-                        <h3 class="text-center font-weight-light text-light">Informações</h3>
+                        <h3 class="text-center font-weight-light text-light">Prazos e Percentuais</h3>
                     </div>
-                    <div class="card-body">
-                        <angular-editor [(ngModel)]="htmlContent" [config]="config"></angular-editor>
-                        <button type="submit" class="btn btn-success mt-3" (click)="saveInformation()">
-                            <i class="fas fa-save"></i>
-                            Salvar
-                        </button>
+                    <div class="card-body text-white bg-light">
+                        <div class="card-body text-white bg-light" >
+                            <form #clienteForm="ngForm" (ngSubmit)="onSubmit()">
+                                <div class="form-group">
+                                    <label style="color: black;">Prazo médio Entrega:</label>
+                                    <input type="text" class="form-control" [(ngModel)]="empresa.prazoMedioEntrega" name="prazoMedioEntrega"/>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color: black;">Percentual de Lucro Desejado:</label>
+                                    <div class="input-group">
+                                        <input type="text" currencyMask class="form-control" name="lucro" [(ngModel)]="empresa.percentualLucro" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label style="color: black;">Percentual de Iva:</label>
+                                    <div class="input-group">
+                                        <input type="text" currencyMask class="form-control" name="iva" [(ngModel)]="empresa.percentualIva" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                    <button type="submit" class="btn btn-success" (click)="saveOutrasInformacoes()">
+                                        <i class="fas fa-save"></i>
+                                        Enviar
+                                    </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-secondary" style="padding: 0px;">
+                        <h3 class="text-center font-weight-light text-light">Preview Orçamento</h3>
+                    </div>
+                    <div class="card-body" >
+                        <div class="rounded border border-dark" style="padding: 5px; overflow: auto; height: 300px;">
+                            <body>
+                                <div style="margin: 10px;">
+                                    <table style="color: black; width: 100%; font-size: 15px;">
+                                        <tr>
+                                            <td>
+                                                <img class="images" [src]="logotipo" width="100" height="100" *ngIf="logotipo"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <h2>{{empresa.nome}}</h2>
+                                            </td>
+                                            <td style="width: 33%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left; font-size: 15px; padding-top: 20px;">
+                                                Data: {{now | date: 'dd/MM/yyyy'}}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: right;">
+                                                Att: {{pedido.cliente.nome}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: right;">
+                                                {{pedido.cliente.endereco}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: center;">
+                                                <h1>ORÇAMENTO</h1>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="text-align: center;">
+                                                <p class="text-justify">
+                                                    Venho por meio deste apresentar orçamento pedido por V. Exas:
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr class="table">
+                                            <td colspan="3" >
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <td>Produto</td>
+                                                        <td>Quantidade</td>
+                                                        <td>Dimensões</td>
+                                                        <td>Valor</td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of pedido.itens">
+                                                        <td>{{item.produto}}</td>
+                                                        <td>{{item.quantidade}}</td>
+                                                        <td>A: {{item.altura}} x L: {{item.largura}} </td>
+                                                        <td>{{item.totalItem | currency}}€</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-left">Total</td>
+                                                        <td>{{pedido.valorTotalPedido | currency }}€</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Assinatura: ______________________________</td>
+                                            <td></td>
+                                            <td>Cliente: <br> _________________________________</td>
+                                        </tr>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" style="font-size: 12px; text-align: right; padding-bottom: 100px; padding-top: 100px;">
+                                                    {{empresa.nome}}, {{contato.endereco}}, contato: {{contato.telefone}} / {{contato.email}}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="page-break">
+                            
+                                    <table>
+                                        <tr class="page-break">
+                                            <td>
+                                                <img class="images" [src]="logotipo" width="100" height="100" *ngIf="logotipo"/>
+                                            </td>
+                                            <td colspan="2" style="text-align: center;">
+                                                <h1>OUTRAS INFORMAÇÕES</h1>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div [innerHTML]="information"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </body>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
     </table>
+    <div class="card shadow-lg border-0 rounded-lg mb-5">
+        <div class="card-header bg-secondary" style="padding: 0px;">
+            <h3 class="text-center font-weight-light text-light">Informações</h3>
+        </div>
+        <div class="card-body">
+            <ckeditor [(ngModel)]="htmlContent" [config]="config" debounce="300" [editor]="Editor" name="content" style="max-width: 200px;"></ckeditor>
+            
+            <button type="submit" class="btn btn-success mt-3" (click)="saveInformation()">
+                <i class="fas fa-save"></i>
+                Salvar
+            </button>
+        </div>
+    </div>
     <div class="d-flex justify-content-center align-items-center" *ngIf="loading" style="width: 100%; position: absolute; display: none; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999999; cursor: pointer;">
         <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
             <span class="visually-hidden">Loading...</span>

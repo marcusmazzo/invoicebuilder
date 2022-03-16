@@ -1,0 +1,64 @@
+
+<app-relatorio-header [empresa]="empresa" [logotipo]="logotipo"></app-relatorio-header>
+<body style="margin-top: 100px;">
+    <div style="margin: 10px;" class="content">
+        <table style="color: black; width: 100%; font-size: 15px;">
+            <tr>
+                <td colspan="2">
+                    Data: {{pedido.dataPedido | date: 'dd/MM/yyyy'}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;">
+                    Att: {{pedido.cliente.nome}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;">
+                    {{pedido.cliente.endereco}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <h1>ORÇAMENTO</h1>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <p class="text-justify">
+                        Venho por meio deste apresentar orçamento pedido por V. Exas:
+                    </p>
+                </td>
+            </tr>
+            <tr class="table">
+                <td colspan="3" >
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Produto</td>
+                            <td>Quantidade</td>
+                            <td>Dimensões</td>
+                            <td>Valor</td>
+                        </tr>
+                        <tr *ngFor="let item of pedido.itens">
+                            <td>{{item.produto}}</td>
+                            <td>{{item.quantidade}}</td>
+                            <td>A: {{item.altura}} x L: {{item.largura}} </td>
+                            <td>{{item.totalItem | currency}}€</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-left">Total</td>
+                            <td>{{pedido.valorTotalPedido | currency }}€</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Assinatura: ______________________________</td>
+                <td></td>
+                <td>Cliente: <br> _________________________________</td>
+            </tr>
+        </table>
+    </div>
+    <app-relatorio-information [information]="information"></app-relatorio-information>
+</body>
+<app-relatorio-footer [empresa]="empresa" [contato]="contato"></app-relatorio-footer>

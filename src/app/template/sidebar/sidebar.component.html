@@ -15,7 +15,7 @@
                     <a class="nav-link" routerLink="/cliente"><i class="fas fa-wallet" style="color:black !important; margin-right: 5px;"></i><span>Cliente</span></a>
                 </li>
                 <li>
-                    <a class="nav-link" routerLink="/nota"><i class="fas fa-receipt" style="color:black !important; margin-right: 5px;"></i>Orçamento</a>
+                    <a class="nav-link" routerLink="/cliente/visita"><i class="fas fa-wallet" style="color:black !important; margin-right: 5px;"></i><span>Visitas</span></a>
                 </li>
             </ul>
         </li>
@@ -25,7 +25,7 @@
             </a>
             <ul id="financeiro-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a class="nav-link" routerLink="/compra"><div class="sb-nav-link-icon"><i class="fas fa-shopping-basket" style="color:black !important; margin-right: 5px;"></i></div>Pagamento</a>
+                    <a class="nav-link" routerLink="/caixa"><div class="sb-nav-link-icon"><i class="fas fa-shopping-basket" style="color:black !important; margin-right: 5px;"></i></div>Pagamento</a>
                 </li>
             </ul>
         </li>
@@ -41,11 +41,14 @@
         </li>
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#config-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Configurações</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-menu-button-wide"></i><span style="margin-left: 3px;">Configurações</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="config-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
                     <a class="nav-link" routerLink="/empresa/dados"><div class="sb-nav-link-icon"><i class="fas fa-cog" style="color:black !important; margin-right: 5px;"></i></div>Geral</a>
+                </li>
+                <li>
+                    <a class="nav-link" routerLink="/produto"><div class="sb-nav-link-icon"><i class="fas fa-clipboard-list" style="color:black !important; margin-right: 5px;"></i></div>Produtos</a>
                 </li>
             </ul>
         </li>

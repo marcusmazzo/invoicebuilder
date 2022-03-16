@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cliente } from '../models/cliente';
-import { Item } from '../models/item';
 import { Pedido } from '../models/pedido';
 import { ClienteService } from '../services/cliente.service';
 
@@ -39,7 +38,7 @@ export class ClienteComponent implements OnInit {
   }
 
   new() {
+    this.service.setIsNew(true);
     this.route.navigate(['cliente/new']).then(_ => null);
   }
-
 }

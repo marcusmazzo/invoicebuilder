@@ -1,0 +1,72 @@
+<div class="pagetitle">
+    <h1 class="mt-4">Configurações</h1>
+    <nav>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Produtos</li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard">
+    <div class="row">
+        <table>
+            <tr>
+                <td>Descrição</td>
+                <td>Descrição Completa</td>
+                <td>Tipo</td>
+                <td>Custo M2</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" class="form-control" [(ngModel)]="produto.descricao" name="descricao"/>
+                </td>
+                <td>
+                    <input type="textarea" class="form-control" [(ngModel)]="produto.descricaoCompleta" name="descricaoCompleta"/>
+                </td>
+                <td>
+                    <select class="form-control" id="produto" [(ngModel)]="produto.tipoProduto" name="tipoProduto">
+                        <option *ngFor="let tipo of tiposProduto" [ngValue]="tipo">{{tipo}}</option>
+                    </select>    
+                </td>
+                <td>
+                    <input type="text" currencyMask class="form-control" [(ngModel)]="produto.custoMedio" name="custoMedio" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
+                </td>
+                <td>
+                    <button type="submit" class="btn bg-success text-light" (click)="save()">
+                        <i class="fas fa-plus"></i>
+                        Salvar
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-sm table-stripped">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Tipo</th>
+                    <th>Custo M2</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let produto of produtos">
+                    <td>{{produto.descricao}}</td>
+                    <td>{{produto.tipoProduto}}</td>
+                    <td>€ {{produto.custoMedio | currency}}</td>
+                    <td>
+                        <button (click)="prepareToUpdate(produto)">
+                            <i class="fas fa-pen" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="loading" style="width: 100%; position: absolute; display: none; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999999; cursor: pointer;">
+        <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>  
+</section>

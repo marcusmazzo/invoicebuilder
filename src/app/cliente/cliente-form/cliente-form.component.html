@@ -7,7 +7,16 @@
     </nav>
 </div>
 <section class="section dashboard">
+
     <table style="width: 100%; font-size: 12px  ;">
+        <tr>
+            <td colspan="2" *ngIf="messages && messages.length > 0 && messages[0].typeError" class="bg-danger text-white text-center mb-5">
+                <ng-container *ngFor="let message of messages">
+                    <span  style="font-size: 15px;">{{message.message}}</span>
+                    <br>
+                </ng-container>
+            </td>
+        </tr>
         <tr>
             <td style="vertical-align: top; width: 48%; padding-right: 2%;">
                 <div class="card shadow-lg border-0 rounded-lg mb-2">
@@ -15,38 +24,35 @@
                         <h3 class="text-center font-weight-light text-light">Dados</h3>
                     </div>
                     <div class="card-body text-white bg-light">
-                        <form #clienteForm="ngForm">
+                        <form class="row g-3 was-validated">
                             <div class="form-group">
-                                <label style="color: black;">Nome:</label>
-                                <input type="text" class="form-control" [(ngModel)]="cliente.nome" name="nome"/>
+                                <label class="form-label" style="color: black;">Nome:</label>
+                                <input type="text" class="form-control" [(ngModel)]="cliente.nome" name="nome" id="nome" required/>
                             </div>
                             <div class="form-group">
                                 <label style="color: black;">NIF:</label>
-                                <input type="text" class="form-control" [(ngModel)]="cliente.nif" name="nif"/>
+                                <input type="text" class="form-control" [(ngModel)]="cliente.docIdentificacao" name="nif" id="nif" required/>
                             </div>
                             <div class="form-group">
                                 <label style="color: black;">Endereço:</label>
-                                <input type="text" class="form-control" name="endereco" [(ngModel)]="cliente.endereco"/>
+                                <input type="text" class="form-control" name="endereco" [(ngModel)]="cliente.endereco" required/>
                             </div>
                             <div class="form-group mb-1">
                                 <label style="color: black;">Telefone:</label>
-                                <input type="text" class="form-control" name="telefone" [(ngModel)]="cliente.telefone"/>
+                                <input type="text" class="form-control" name="telefone" [(ngModel)]="cliente.contato" required/>
                             </div>
-                            <div class="form-group mb-1">
-                                <label style="color: black;">Email:</label>
-                                <input type="email" class="form-control" name="email" [(ngModel)]="cliente.email"/>
+                            <div class="form-group" style="margin-bottom: 25px;">
+                                <label style="color: black;" for="email" class="form-label">Email:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="emailValidation">@</span>
+                                    <input type="text" class="form-control" id="email" aria-describedby="emailValidation" name="email" [(ngModel)]="cliente.email" required>
+                                </div>
                             </div>
-                            <div class="form-group mb-1" style="min-height: 53px;">
-                            </div>
-                            <button type="button" class="btn btn-success">
-                                <i class="fas fa-save"></i>
-                                Enviar
-                            </button>
                         </form>
                     </div>
                 </div>
             </td>
-            <td style="vertical-align: top; width: 48%; padding-right: 2%;">
+            <td style="vertical-align: top; width: 48%;">
                 <table style="width: 100%;">
                     <tr>
                         <td>
@@ -156,7 +162,7 @@
             </td>
         </tr>
         <tr>
-            <td style="vertical-align: top; width: 100%; padding-right: 2%;" colspan="2">
+            <td style="vertical-align: top; width: 100%;" colspan="2">
                 <div class="card shadow-lg border-0 rounded-lg">
                     <div class="card-header bg-secondary" style="padding: 0px;">
                         <h3 class="text-center font-weight-light text-light">Dados do Pedido</h3>
@@ -179,7 +185,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let item of pedido.itensPedido">
+                                                <tr *ngFor="let item of pedido.itens">
                                                     <td>{{item.produto}}</td>
                                                     <td>A: {{item.altura}} x L: {{item.largura}} </td>
                                                     <td>{{item.quantidade}}</td>
@@ -199,7 +205,7 @@
                                                 Quantidade Itens
                                             </td>
                                             <td>
-                                                {{pedido.itensPedido.length || 0}}
+                                                {{pedido.itens.length || 0}}
                                             </td>
                                         </tr>
                                         <tr>
@@ -227,7 +233,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="padding-right: 2%;">
+            <td colspan="2">
                 <button type="button" class="btn btn-success" style="width: 100%;" (click)="save()">
                     <i class="fas fa-save"></i>
                     Salvar Pedido
@@ -239,5 +245,8 @@
         <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
-    </div>    
+    </div>  
+    
+
 </section>
+
