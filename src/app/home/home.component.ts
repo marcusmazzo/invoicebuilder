@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { Pagamento } from '../models/pagamento';
 import { Pedido } from '../models/pedido';
 import { Visita } from '../models/visita';
+import { CaixaService } from '../services/caixa.service';
 import { ClienteService } from '../services/cliente.service';
 
 
@@ -20,9 +22,10 @@ export class HomeComponent implements OnInit {
   searchedVisita: boolean;
   listar: boolean;
   dataVisita: NgbDate;
+  pagamentos: Pagamento[];
 
 
-  constructor(private clienteService: ClienteService) { }
+  constructor(private clienteService: ClienteService, private caixaService: CaixaService) { }
 
   
 
@@ -35,6 +38,11 @@ export class HomeComponent implements OnInit {
   list() {
     this.clienteService.findVisitasAgendado().subscribe(response => this.visitas = response);
     this.clienteService.findAllPedido().subscribe(response => this.pedidos = response);
+    this.caixaService.findAll().subscribe(response => {
+      console.log(response);
+      
+      this.pagamentos = response
+    });
   }
 
   showVisita(visita: Visita){

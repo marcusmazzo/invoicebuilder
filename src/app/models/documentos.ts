@@ -1,10 +1,10 @@
 import { Cliente } from "./cliente";
 import { Pedido } from "./pedido";
 
-export class Pagamento{
+export class Documentos {
     id: number;
-    pedido: Pedido;
-    dataPagamento: Date;
-    valorRecebido: number;
     cliente: Cliente
+    pedido: Pedido
+    contratoBase64: String
+    nomeDocumento: string
 }

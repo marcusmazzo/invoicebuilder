@@ -23,12 +23,13 @@
             <tr *ngFor="let pedido of pedidos">
                 <td>{{pedido.numeroPedido}}</td>
                 <td>{{pedido.dataPedido  | date: 'dd/MM/yyyy'}}</td>
-                <td>{{pedido.estadoPedido}}</td>
+                <td>{{pedido.statusPedido}}</td>
                 <td>
-                    <button>
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="showPagamentos(pedido)">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="showPagamentos(pedido)" style="margin-right: 2px;">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="cancelarPedido(pedido)" style="margin-right: 2px;">
+                        <i class="fas fa-ban"></i>
                     </button>
                 </td>
             </tr>
@@ -41,15 +42,33 @@
     <div class="modal-dialog" role="document" >
         <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Pagamento <b>{{pedido.numeroPedido}}</b></h5>
+                <h5 class="modal-title" id="exampleModalLabel">Orçamento <b>{{pedido.numeroPedido}}</b></h5>
+                <button class="btn btn-secondary btn-sm" (click)="download(pedido.id)" style="margin-right: 2px;">
+                    Orçamento
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm" (click)="download(pedido.id)" style="margin-right: 2px;">
+                    Recibo
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadModal" style="margin-right: 2px;" (click)="showDocumentos()">
+                    Documentos
+                    <i class="fas fa-upload"></i>
+                </button>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label" style="color: black;">Nome:</label>
-                    <input type="text" class="form-control" [(ngModel)]="pedido.cliente.nome" name="nome" id="nome" disabled/>
+                <div class="input-group" >
+                    <div class="form-group mb-1" style="width: 70%; margin-right: 5%;">
+                        <label class="form-label" style="color: black;">Nome:</label>
+                        <input type="text" class="form-control" [(ngModel)]="pedido.cliente.nome" name="nome" id="nome" disabled/>
+                    </div>
+                    <div class="form-check form-switch" style="width: 25%;">
+                        <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com IVA</label>
+                        <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()"/>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label style="color: black;">NIF:</label>
@@ -121,6 +140,37 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Documentação de <b>{{pedido.numeroPedido}}</b></h5>
+                <button type="button" class="close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#pagamentoModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="file" id="formFileMultiple" multiple accept="application/pdf" (change)="prepareUpload($event.target.files)"/>
+
+                <hr class="mb-5">
+                <table class="table table-sm table-striped">
+                    <tr *ngFor="let documento of documentos">
+                        <td>{{documento.nomeDocumento}}</td>
+                        <td>
+                            <button (click)="downloadContrato(documento)">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="upload()">Enviar</button>
             </div>
         </div>
     </div>

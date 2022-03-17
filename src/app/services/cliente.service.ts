@@ -114,4 +114,8 @@ export class ClienteService {
     return this.http.get<Pedido[]>(this.baseUrl+"/pedido");
   }
 
+  updatePedido(pedido: Pedido): Observable<Pedido> {
+    return this.http.post<Pedido>(this.baseUrl+"/pedido/atualizar", pedido);
+  }
+
 }

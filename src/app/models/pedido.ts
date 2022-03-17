@@ -12,9 +12,11 @@ export class Pedido {
     itens: Item[]
     expanded: boolean;
     cliente: Cliente
+    pagamentoComIva: boolean
 
     valorTotalPedido: number
     custoTotalPedido: number
     totalItensPedido: number
     valorTotalPago: number;
+    statusPedido: string;
 }
