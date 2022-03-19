@@ -13,10 +13,12 @@ export class Pedido {
     expanded: boolean;
     cliente: Cliente
     pagamentoComIva: boolean
-
     valorTotalPedido: number
+    valorTotalPedidoIva: number;
+
     custoTotalPedido: number
     totalItensPedido: number
     valorTotalPago: number;
     statusPedido: string;
+    numeroRecibo: string;
 }

@@ -99,6 +99,13 @@ export class CaixaComponent implements OnInit {
     window.open(url, "_blank");
   }
 
+  downloadRecibo(id: number) {
+    const url = this.route.serializeUrl(
+      this.route.createUrlTree(['/relatorio', id, this.pedido.cliente.id, 'r'])
+    );
+    window.open(url, "_blank");
+  }
+
   pagamentoComIva() {
     this.pedido.pagamentoComIva = !this.pedido.pagamentoComIva;
     this.clienteService.updatePedido(this.pedido).subscribe();

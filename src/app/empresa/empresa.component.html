@@ -245,7 +245,34 @@
     </table>
     <div class="card shadow-lg border-0 rounded-lg mb-5">
         <div class="card-header bg-secondary" style="padding: 0px;">
-            <h3 class="text-center font-weight-light text-light">Informações</h3>
+            <div class="text-center font-weight-light text-light pt-2" style="padding-left: 15px; float: left; margin-right: auto;">
+                <h3>Recibo</h3> 
+            </div>
+            <div class="font-weight-light text-light pull right pt-2" style="float: right; padding-right: 15px; vertical-align: middle; height: 48px; cursor: pointer;">
+                <button class="text-light" data-bs-toggle="modal" data-bs-target="#helpModal" style="margin-right: 2px; background-color: transparent; border: none;">
+                    <h3><i class="bi bi-info-circle" aria-hidden="true" style="min-height: 48px; min-width: 48px;"></i></h3>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <ckeditor [(ngModel)]="htmlContentRecibo" [config]="config" debounce="300" [editor]="Editor" name="content" style="max-width: 200px;"></ckeditor>
+            
+            <button type="submit" class="btn btn-success mt-3" (click)="saveRecibo()">
+                <i class="fas fa-save"></i>
+                Salvar
+            </button>
+        </div>
+    </div>
+    <div class="card shadow-lg border-0 rounded-lg mb-5">
+        <div class="card-header bg-secondary" style="padding: 0px; width: 100%;">
+            <div class="text-center font-weight-light text-light pt-2" style="padding-left: 15px; float: left; margin-right: auto;">
+                <h3>Informações</h3> 
+            </div>
+            <div class="font-weight-light text-light pull right pt-2" style="float: right; padding-right: 15px; vertical-align: middle; height: 48px; cursor: pointer;">
+                <button class="text-light" data-bs-toggle="modal" data-bs-target="#helpModal" style="margin-right: 2px; background-color: transparent; border: none;">
+                    <h3><i class="bi bi-info-circle" aria-hidden="true" style="min-height: 48px; min-width: 48px;"></i></h3>
+                </button>
+            </div>
         </div>
         <div class="card-body">
             <ckeditor [(ngModel)]="htmlContent" [config]="config" debounce="300" [editor]="Editor" name="content" style="max-width: 200px;"></ckeditor>
@@ -256,9 +283,40 @@
             </button>
         </div>
     </div>
+
     <div class="d-flex justify-content-center align-items-center" *ngIf="loading" style="width: 100%; position: absolute; display: none; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999999; cursor: pointer;">
         <div id="overlay" class="d-flex justify-content-center spinner-border text-light" style="width: 7rem; height: 7rem;" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>    
 </section>
+
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel"><b>Ajuda</b></h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-justify">
+                    Para incluir markups (tags especiais que serão processadas e substituídas) deverá utilizar as tags abaixo listadas:
+                </p>
+                <ul class="text-justify">
+                    <li><span style="font-weight: bold; ">[[itens]]</span> - inserir descrição de itens do pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[cliente]]</span> - inserir nome do cliente no texto</li>
+                    <li><span style="font-weight: bold; ">[[morada]]</span> - inserir dados da morada no texto</li>
+                    <li><span style="font-weight: bold; ">[[garantias]]</span> - inserir informação de garantia para cada item do pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[valor-pagamento]]</span> - inserir informação do valor pago referente ao pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[valor-extenso]]</span> - inserir informação do valor pago, por extenso, referente ao pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[pedido]]</span> - inserir informação do número pedido no texto</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                
+            </div>
+        </div>
+    </div>
+</div>

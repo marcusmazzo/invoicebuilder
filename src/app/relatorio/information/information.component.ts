@@ -14,12 +14,7 @@ export class InformationComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    let itensDescricao = "";
-    this.itens.forEach(item => {
-      itensDescricao += item.descricaoProduto+"<br />";
-    })
-
-    this.information = (this.information.toString() as String).replace("[[itens]]", itensDescricao);
+    
 
   }
 

@@ -2,6 +2,7 @@ export class Item {
 
     produto: String;
     descricaoProduto: String;
+    garantia: String
     altura: number;
     largura: number;
     custoFabricacao: number;

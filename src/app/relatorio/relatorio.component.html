@@ -2,7 +2,7 @@
 <app-relatorio-header [empresa]="empresa" [logotipo]="logotipo"></app-relatorio-header>
 <body style="margin-top: 100px;">
     <div style="margin: 10px;" class="content">
-        <table style="color: black; width: 100%; font-size: 15px;">
+        <table style="color: black; width: 100%; font-size: 15px;" *ngIf="orcamento">
             <tr>
                 <td colspan="2">
                     Data: {{pedido.dataPedido | date: 'dd/MM/yyyy'}}
@@ -43,13 +43,53 @@
                             <td>{{item.produto}}</td>
                             <td>{{item.quantidade}}</td>
                             <td>A: {{item.altura}} x L: {{item.largura}} </td>
-                            <td>{{item.totalItem | currency}}€</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="text-left">Total</td>
-                            <td>{{pedido.valorTotalPedido | currency }}€</td>
+                            <td style="text-align: right;">{{item.totalItem | currency}}€</td>
                         </tr>
                     </table>
+                    <table style="width: 100%;">
+                        <tr *ngIf="pedido.pagamentoComIva">
+                            <td style="width: 67%;">Valor IVA</td>
+                            <td style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva - pedido.valorTotalPedido | currency }}€</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 67%;">Total</td>
+                            <td *ngIf="pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva  | currency }}€</td>
+                            <td *ngIf="!pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedido  | currency }}€</td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="pt-5">Assinatura: <br>______________________________</td>
+                <td></td>
+                <td class="pt-5">Cliente: <br> _________________________________</td>
+            </tr>
+        </table>
+        <table style="color: black; width: 100%; font-size: 15px;" *ngIf="!orcamento">
+            <tr>
+                <td colspan="2">
+                    Data: {{pedido.dataPedido | date: 'dd/MM/yyyy'}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;">
+                    Att: {{pedido.cliente.nome}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: right;">
+                    {{pedido.cliente.endereco}}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <h1>Recibo {{pedido.numeroRecibo}}</h1>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center;">
+                    <div [innerHTML]="recibo"></div>
                 </td>
             </tr>
             <tr>
@@ -59,6 +99,6 @@
             </tr>
         </table>
     </div>
-    <app-relatorio-information [information]="information"></app-relatorio-information>
+    <app-relatorio-information [information]="information" *ngIf="orcamento"></app-relatorio-information>
 </body>
 <app-relatorio-footer [empresa]="empresa" [contato]="contato"></app-relatorio-footer>

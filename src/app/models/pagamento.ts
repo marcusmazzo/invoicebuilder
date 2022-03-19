@@ -7,4 +7,6 @@ export class Pagamento{
     dataPagamento: Date;
     valorRecebido: number;
     cliente: Cliente
+    numeroPagamento: String
+    pedidoPagamento: number
 }

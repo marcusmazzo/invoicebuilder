@@ -10,29 +10,37 @@
     <div class="row">
         <table>
             <tr>
-                <td>Descrição</td>
-                <td>Descrição Completa</td>
-                <td>Tipo</td>
-                <td>Custo M2</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
+                <td style="width: 5%; padding-bottom: 20px;">Produto</td>
+                <td style="width: 40%; padding-right: 5%; padding-bottom: 20px;">
                     <input type="text" class="form-control" [(ngModel)]="produto.descricao" name="descricao"/>
                 </td>
-                <td>
-                    <input type="textarea" class="form-control" [(ngModel)]="produto.descricaoCompleta" name="descricaoCompleta"/>
-                </td>
-                <td>
+                <td style="width: 5%; padding-bottom: 20px;">Tipo</td>
+                <td style="width: 20%; padding-right: 5%; padding-bottom: 20px;">
                     <select class="form-control" id="produto" [(ngModel)]="produto.tipoProduto" name="tipoProduto">
                         <option *ngFor="let tipo of tiposProduto" [ngValue]="tipo">{{tipo}}</option>
                     </select>    
                 </td>
-                <td>
+                <td style="width: 5%; padding-bottom: 20px;">Custo m2</td>
+                <td style="width: 15%; padding-bottom: 20px;">
                     <input type="text" currencyMask class="form-control" [(ngModel)]="produto.custoMedio" name="custoMedio" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
                 </td>
-                <td>
-                    <button type="submit" class="btn bg-success text-light" (click)="save()">
+            <tr>
+                <td style="padding-bottom: 20px;">Descrição</td>
+                <td style="padding-right: 5%; padding-bottom: 20px;">
+                    <div>
+                        <textarea class="form-control" [(ngModel)]="produto.descricaoCompleta" name="descricaoCompleta"></textarea>
+                    </div>
+                </td>
+                <td style="padding-bottom: 20px;">Garantia</td>
+                <td colspan="3" style="padding-bottom: 20px;">
+                    <div>
+                        <textarea class="form-control" [(ngModel)]="produto.garantia" name="garantia"></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="padding-bottom: 20px;">
+                    <button type="submit" class="btn bg-success text-light" (click)="save()" style="width: 100%;">
                         <i class="fas fa-plus"></i>
                         Salvar
                     </button>

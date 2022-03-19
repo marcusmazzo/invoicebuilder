@@ -16,6 +16,9 @@ export class CaixaService {
 
   constructor(private http: HttpClient) { }
 
+  public findById(id: number) : Observable<Pagamento> {
+    return this.http.get<Pagamento>(this.baseUrl+"/caixa/"+id);
+  }
 
   public findAll() : Observable<Pagamento[]> {
     return this.http.get<Pagamento[]>(this.baseUrl+"/caixa");

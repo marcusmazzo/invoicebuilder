@@ -35,6 +35,7 @@ export class ProdutoComponent implements OnInit {
 
   save() {
     this.loading = true;
+    this.produto.garantia = this.produto.garantia.replace("\n", "<br />");
     this.service.save(this.produto).subscribe(response => this.ngOnInit());
   }
 

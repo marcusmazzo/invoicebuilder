@@ -4,9 +4,8 @@ import { RelatorioComponent } from './relatorio.component';
 
 
 const routes: Routes = [
-  { path: 'relatorio/:id/:idCliente', 
-    component: RelatorioComponent
-  }
+  { path: 'relatorio/:id/:idCliente', component: RelatorioComponent},
+  { path: 'relatorio/:id/:idCliente/:recibo', component: RelatorioComponent}
 ];
 
 

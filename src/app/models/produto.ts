@@ -4,5 +4,6 @@ export class Produto {
     tipoProduto: String;
     custoMedio: number;
     descricaoCompleta: String
+    garantia: String
 
 }

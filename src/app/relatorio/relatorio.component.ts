@@ -8,6 +8,9 @@ import { LoginService } from '../services/login.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Cliente } from '../models/cliente';
 import { ActivatedRoute } from '@angular/router';
+import { CaixaService } from '../services/caixa.service';
+import { Pagamento } from '../models/pagamento';
+import extenso from 'node_modules/extenso/dist/extenso'
 
 @Component({
   selector: 'app-relatorio',
@@ -19,6 +22,7 @@ export class RelatorioComponent implements OnInit {
   constructor(
     private clienteService: ClienteService, 
     private loginService: LoginService, 
+    private caixaService: CaixaService,
     private sanitizer: DomSanitizer, 
     private routeParams: ActivatedRoute
     ) { }
@@ -29,11 +33,13 @@ export class RelatorioComponent implements OnInit {
   information: any = '';
   logotipo: SafeUrl;
   now: Date
+  orcamento: boolean
+  recibo: any = ''
 
   ngAfterViewInit() {
     setTimeout(() => {
       window.print();
-    }, 50);
+    }, 250);
     setTimeout(() => {
       window.close();
     }, 500);
@@ -41,33 +47,75 @@ export class RelatorioComponent implements OnInit {
 
   ngOnInit(): void {
     this.now = new Date();
+    this.empresa = JSON.parse(this.loginService.getEmpresa());
+    this.contato = JSON.parse(this.loginService.getEmpresa());
+    this.logotipo = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,'+this.empresa.logotipoBase64 as string);
+    
     this.routeParams.params.subscribe(param => {
+      this.orcamento = param['recibo'] === undefined  ? true : false;
       let idPedido = parseInt(param['id'])
-      let idCliente = parseInt(param['idCliente'])
+
       if(idPedido == null || idPedido == undefined || isNaN(idPedido)) {
         this.mock()
       } else {
-        this.clienteService.findPedidoById(idPedido).subscribe(response => {
+        if(this.orcamento) {
+          this.clienteService.findPedidoById(idPedido).subscribe(response => {
             this.pedido = response
             let cliente: Cliente = new Cliente();
-            cliente.id = idCliente;
+            cliente.id = parseInt(param['idCliente']);
             this.clienteService.findById(cliente).subscribe(response => this.pedido.cliente = response);
-            this.empresa = JSON.parse(this.loginService.getEmpresa());
-            this.contato = JSON.parse(this.loginService.getEmpresa());
-
             let itensDescricao = "";
+            let garantias = "<ul>";
             this.pedido.itens.forEach(item => {
               itensDescricao += item.descricaoProduto+"<br />";
+              garantias += "<li>"+item.garantia+"</li>";
             })
-            let informacao = (this.empresa.informacoes as string).replace("[[itens]]", itensDescricao);
+            garantias += "</ul>"
+            
+            if(garantias.length > 1000) {
+              let value = "<div class='page-break text-justify' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>";
+              let index = 0;
+              for(let i=0; i < garantias.length; i++){
+                value += garantias.charAt(i);
+                index++;
 
+                if(index > 1930 && garantias.charAt(i) === " "){
+                  value += "</div><br /><br /><br /><br /><br /><br /><div class='page-break' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>"
+                  index = 0;
+                }
+              }
+              garantias = value+garantias.slice(value.length+1)+"</div><br /><br /><br /><br /><br /><br />";
+            }
+
+            let informacao = (this.empresa.informacoes as string).replace("[[itens]]", itensDescricao).replace("[[garantias]]", garantias);
+            
             this.information = this.sanitizer.bypassSecurityTrustHtml(informacao);
-            this.logotipo = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,'+this.empresa.logotipoBase64 as string);
+          })
+        } else {
+          this.caixaService.findById(idPedido).subscribe(response => {
+            let pagamento: Pagamento = response;
+            this.clienteService.findPedidoById(pagamento.pedidoPagamento).subscribe(pedido => {
+              this.pedido = pedido;
+              this.pedido.numeroRecibo = pagamento.numeroPagamento as string;
+              this.pedido.dataPedido = pagamento.dataPagamento;
+              this.pedido.cliente = pagamento.cliente;
+              let valor = new String(pagamento.valorRecebido).replace(",","").replace(".", ",") as string;
+              
+              if(valor.charAt(valor.length-2) === "," ){
+                valor = valor+"0";
+              }
+
+              let texto = (this.empresa.textoRecibo as string)
+                .replace("[[cliente]]", this.pedido.cliente.nome as string)
+                .replace("[[valor-pagamento]]", "€"+ pagamento.valorRecebido as string)
+                .replace("[[valor-extenso]]", extenso(valor, { mode: 'currency', currency: { type: 'EUR' } }))
+                .replace("[[pedido]]", this.pedido.numeroPedido as string)
+              this.recibo = this.sanitizer.bypassSecurityTrustHtml(texto);
+            });
           })
         }
-        
       }  
-    );
+    });
         
     
 

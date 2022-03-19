@@ -13,6 +13,7 @@
                 <th colspan="5" class="text-dark h6" style="text-align: center; color: white !important;">Orçamentos</th>
             </tr>
             <tr>
+                <th>Cliente</th>
                 <th>Número Pedido</th>
                 <th>Data Pedido</th>
                 <th>Status</th>
@@ -21,6 +22,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let pedido of pedidos">
+                <td>{{pedido.cliente.nome}}</td>
                 <td>{{pedido.numeroPedido}}</td>
                 <td>{{pedido.dataPedido  | date: 'dd/MM/yyyy'}}</td>
                 <td>{{pedido.statusPedido}}</td>
@@ -47,7 +49,7 @@
                     Orçamento
                     <i class="fa fa-download" aria-hidden="true"></i>
                 </button>
-                <button class="btn btn-secondary btn-sm" (click)="download(pedido.id)" style="margin-right: 2px;">
+                <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reciboModal" style="margin-right: 2px;">
                     Recibo
                     <i class="fa fa-download" aria-hidden="true"></i>
                 </button>
@@ -67,7 +69,7 @@
                     </div>
                     <div class="form-check form-switch" style="width: 25%;">
                         <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com IVA</label>
-                        <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()"/>
+                        <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()" [disabled]="pagamentos"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -81,7 +83,8 @@
                 <div class="input-group" >
                     <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
                         <label style="color: black;">Valor Total Pedido:</label>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">€ {{pedido.valorTotalPedido | currency}}</span>
+                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido | currency}}</span>
+                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva | currency}}</span>
                     </div>
                     <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
                         <label style="color: black;">Valor Total Pago:</label>
@@ -89,7 +92,8 @@
                     </div>
                     <div class="form-group mb-1" style="width: 30%;">
                         <label style="color: black;">Saldo Devedor:</label>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">€ {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
+                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
+                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva - pedido.valorTotalPago | currency}}</span>
                     </div>
 
                 </div>
@@ -149,7 +153,7 @@
     <div class="modal-dialog" role="document" >
         <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Documentação de <b>{{pedido.numeroPedido}}</b></h5>
+                <h5 class="modal-title" id="uploadModalLabel">Documentação de <b>{{pedido.numeroPedido}}</b></h5>
                 <button type="button" class="close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#pagamentoModal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -167,6 +171,44 @@
                             </button>
                         </td>
                     </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="upload()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reciboModal" tabindex="-1" role="dialog" aria-labelledby="reciboModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reciboModalLabel">Recibos de pagamento: <b>{{pedido.numeroPedido}}</b></h5>
+                <button type="button" class="close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#pagamentoModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Número do Recibo</th>
+                            <th>Valor Pagamento</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let pagamento of pagamentos">
+                            <td>{{pagamento.numeroPagamento}}</td>
+                            <td>€ {{pagamento.valorRecebido | currency}}</td>
+                            <td>
+                                <button (click)="downloadRecibo(pagamento.id)">
+                                    <i class="fa fa-download" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <div class="modal-footer">

@@ -49,5 +49,11 @@ export class EmpresaService {
     return this.http.post<Empresa>(this.baseUrl+"/empresa/salvar-informacao", empresa);
   }
 
+  saveRecibo(htmlContent: String) : Observable<Empresa> {
+    let empresa: Empresa = new Empresa()
+    empresa.textoRecibo = htmlContent;
+    return this.http.post<Empresa>(this.baseUrl+"/empresa/salvar-recibo", empresa);
+  }
+
  
 }

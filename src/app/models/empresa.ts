@@ -10,6 +10,7 @@ export class Empresa{
     telefone: String
     logotipoBase64: String
     informacoes: String
+    textoRecibo: String
     email: String
     prazoMedioEntrega: number
     percentualLucro: number

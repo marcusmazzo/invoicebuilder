@@ -27,6 +27,7 @@ export class EmpresaComponent implements OnInit {
   files: FileList;
   logotipo: SafeUrl;
   htmlContent: any = '';
+  htmlContentRecibo: any = ''
   now: Date
   information: any = '';
   
@@ -56,6 +57,7 @@ export class EmpresaComponent implements OnInit {
       this.contato = response;
       this.logotipo = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,'+this.empresa.logotipoBase64 as string);
       this.htmlContent = this.empresa.informacoes;
+      this.htmlContentRecibo = this.empresa.textoRecibo;
       this.information = this.sanitizer.bypassSecurityTrustHtml(this.empresa.informacoes as string)
       this.loading = false;
     })
@@ -92,6 +94,10 @@ export class EmpresaComponent implements OnInit {
   }
   saveInformation() {
     this.service.saveInformation(this.htmlContent).subscribe(response => this.ngOnInit());
+  }
+
+  saveRecibo() {
+    this.service.saveRecibo(this.htmlContentRecibo).subscribe(response => this.ngOnInit());
   }
 
   ngAfterViewChecked() {
