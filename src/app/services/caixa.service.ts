@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -54,6 +54,29 @@ export class CaixaService {
 
   showDocumentos(pedido: Pedido): Observable<Documentos[]> {
     return this.http.get<Documentos[]>(this.baseUrl+"/file/pedido/"+pedido.id);
+  }
+
+  finalizarPedido(pedido: Pedido): Observable<Pedido> {
+    return this.http.get<Pedido>(this.baseUrl+"/pedido/finalizar/"+pedido.id);
+  }
+
+  findAllPedidosAberto(): Observable<Pedido[]> {
+    return this.http.get<Pedido[]>(this.baseUrl+"/pedido/aberto/");
+  }
+
+  findAllPedidosMes(mes: string, ano: string): Observable<Pedido[]> {
+    let params = new HttpParams();
+    params.set("mes", mes);
+    params.set("ano", ano);
+
+    return this.http.get<Pedido[]>(this.baseUrl+"/pedido/mensal/", {params: params});
+  }
+
+  findAllPedidosAno(ano: string): Observable<Pedido[]> {
+    let params = new HttpParams();
+    params.set("ano", ano);
+
+    return this.http.get<Pedido[]>(this.baseUrl+"/pedido/anual/", {params: params});
   }
 
 }

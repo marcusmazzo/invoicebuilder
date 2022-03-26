@@ -8,6 +8,8 @@ export class Pedido {
     valorTotal: number
     valorTotalIva: number
     dataPedido: Date
+    dataPrevisaoEntrega: Date
+    dataEntrega: Date
     estadoPedido: String
     itens: Item[]
     expanded: boolean;

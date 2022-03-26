@@ -44,12 +44,12 @@
                 <td style="vertical-align: middle; text-align: center;">{{visita.cliente.contato}}</td>
                 <td style="vertical-align: middle;">{{visita.cliente.endereco}}</td>
                 <td style="vertical-align: middle; text-align: center;">{{visita.dataVisita | date: 'dd/MM/yyyy'}}</td>
-                <td style="vertical-align: middle; text-align: center;">{{visita.statusVisita}}</td>
+                <td style="vertical-align: middle; text-align: center;">{{visita.descricaoStatusVisita}}</td>
                 <td style="text-align: left; width: 17%;">
-                    <button type="button" class="btn btn-danger btn-sm" (click)="showVisita(visita)" style="margin-right: 2px;">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="cancelarVisita(visita)" style="margin-right: 2px;">
                         <i class="fas fa-ban" title="Cancelar Visita"></i>
                     </button>
-                    <button type="button" class="btn btn-success btn-sm" (click)="showVisita(visita)">
+                    <button type="button" class="btn btn-success btn-sm" (click)="confirmarVisita(visita)">
                         <i class="fas fa-check" title="Confirmar Visita"></i>
                     </button>
                 </td>

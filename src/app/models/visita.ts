@@ -5,4 +5,5 @@ export class Visita {
     cliente: Cliente
     dataVisita: Date
     statusVisita: String
+    descricaoStatusVisita: String
 }

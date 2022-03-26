@@ -2,6 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Cliente } from '../models/cliente';
 import { Documentos } from '../models/documentos';
 import { Pagamento } from '../models/pagamento';
@@ -22,13 +23,20 @@ export class CaixaComponent implements OnInit {
   pagamento: Pagamento;
   pagamentos: Pagamento[];
   documentos: Documentos[]
+  message: String;
+  erro: Boolean;
   totalPedido: number
   files: FileList;
 
-  constructor(private clienteService: ClienteService, private service: CaixaService, private route: Router) { }
+  constructor(private clienteService: ClienteService, private service: CaixaService, private route: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.clienteService.findAllPedido().subscribe(response => this.pedidos = response);
+    this.erro = false;
+    this.clienteService.findAllPedido().subscribe(response => {
+      console.log(response);
+      
+      this.pedidos = response
+    });
     this.pagamento = new Pagamento();
     this.pagamentos = [];
     this.pedido = new Pedido();
@@ -39,13 +47,13 @@ export class CaixaComponent implements OnInit {
   }
 
   showPagamentos(pedido: Pedido) {
+    this.erro = false;
     this.pagamentos = [];
     this.pagamento = new Pagamento();
     this.pagamento.cliente = new Cliente();
     this.pagamento.pedido = new Pedido();
     this.pedido = pedido;
     this.pedido.valorTotalPago = 0;
-    this.pedido.pagamentoComIva = this.pedido.pagamentoComIva == null ? false : true;
     this.totalPedido = this.pedido.valorTotalPedido;
     this.service.findAllByPedido(this.pedido).subscribe(response => {
       this.pagamentos = response;
@@ -54,10 +62,19 @@ export class CaixaComponent implements OnInit {
   }
 
   salvar() {
+
+    if(this.pagamento.valorRecebido == null || this.pagamento.valorRecebido == undefined || this.pagamento.valorRecebido == NaN){
+      this.toastr.error("É preciso informar o valor do pagamento.", "Erro");
+      throw new Error();
+    }
+
     this.pagamento.cliente = this.pedido.cliente;
     this.pagamento.pedido = this.pedido;
     this.pagamento.dataPagamento = new Date(this.dataPagamento.year, this.dataPagamento.month-1, this.dataPagamento.day);
-    this.service.save(this.pagamento).subscribe ( response => this.showPagamentos(this.pagamento.pedido));
+    this.service.save(this.pagamento).subscribe ( response => { 
+      this.showPagamentos(this.pagamento.pedido)
+      this.toastr.success("Pagamento adicionado com sucesso.", "Sucesso");
+    });
   }
 
   cancelarPedido(pedido: Pedido) {
@@ -69,9 +86,15 @@ export class CaixaComponent implements OnInit {
   }
 
   upload() {
+    if(this.files == null || this.files.length == 0){
+      this.toastr.error("É preciso escolher um ficheiro para ser carregado.", "Erro");
+      throw new Error()
+    }
+
     this.service.upload(this.pedido, this.files).subscribe(
       event => {
           this.showDocumentos();
+          this.toastr.success("Ficheiro carregado com sucesso.", "Sucesso");
       }
     );
   }
@@ -108,13 +131,17 @@ export class CaixaComponent implements OnInit {
 
   pagamentoComIva() {
     this.pedido.pagamentoComIva = !this.pedido.pagamentoComIva;
-    this.clienteService.updatePedido(this.pedido).subscribe();
-    if(this.pedido.pagamentoComIva) {
-      this.pedido.valorTotalPedido = this.pedido.valorTotalPedido + (this.pedido.valorTotalPedido * this.pedido.cliente.empresa.percentualIva / 100)
-    } else {
-      this.pedido.valorTotalPedido = this.totalPedido;
-    }
-      
+    this.clienteService.updatePedido(this.pedido).subscribe(response => this.showPagamentos(response));
+  }
+
+  finalizarPedido() {
+    this.service.finalizarPedido(this.pedido).subscribe(
+        response => {
+          this.showPagamentos(response)
+          this.toastr.success("Pedido Finalizado.", "Sucesso");
+        }, err => {
+         this.toastr.error(err.error.message, 'Erro ao Finalizar');
+        });
   }
 
 

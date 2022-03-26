@@ -5,11 +5,12 @@ import { RelatorioRoutingModule } from './relatorio-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { InformationComponent } from './information/information.component';
 import { FooterComponent } from './footer/footer.component';
+import { VendasComponent } from './vendas/vendas.component';
 
 
 
 @NgModule({
-  declarations: [RelatorioComponent, HeaderComponent, InformationComponent, FooterComponent],
+  declarations: [RelatorioComponent, HeaderComponent, InformationComponent, FooterComponent, VendasComponent],
   imports: [
     CommonModule,
     RelatorioRoutingModule

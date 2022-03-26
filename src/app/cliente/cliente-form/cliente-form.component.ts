@@ -10,6 +10,7 @@ import { ClienteService } from 'src/app/services/cliente.service';
 import { Router } from '@angular/router';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { Message } from 'src/app/models/message';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cliente-form',
@@ -25,12 +26,11 @@ export class ClienteFormComponent implements OnInit {
   produtos: Produto[];
   produto: Produto;
   item: Item;
-  messages: Message[];
+  
 
-  constructor(private service: ClienteService, private produtoService: ProdutoService, private route: Router) { }
+  constructor(private service: ClienteService, private produtoService: ProdutoService, private route: Router,  private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.messages = [];
     this.loading = true;
 
     if(this.service.getIsNew()) {
@@ -65,18 +65,22 @@ export class ClienteFormComponent implements OnInit {
   }
 
   adicionarItem(){
+    this.validateAdd();
     this.item.produto = this.produto.descricao;
     this.item.descricaoProduto = this.produto.descricaoCompleta;
+    this.item.garantia = this.produto.garantia;
     this.item.totalItem = this.item.valorVenda * this.item.quantidade;
     this.pedido.itens.push(this.item);
     this.pedido.valorTotal = this.pedido.valorTotal + this.item.totalItem;
 
     this.item = new Item();
     this.produto = new Produto();
+    this.toastr.success("Item adicionado", "Sucesso");
   }
 
   save(){
 
+    
     this.validateInput();
 
     let rota: String = "cliente";
@@ -90,49 +94,68 @@ export class ClienteFormComponent implements OnInit {
       this.pedido.dataPedido = new Date(this.dataPedido.month + "-" + this.dataPedido.day + "-"+this.dataPedido.year);
     }
 
-    console.log(this.pedido);
-    
-
     this.service.salvarPedido(this.pedido).subscribe( response =>
-      this.route.navigate([rota]).then(_ => null)
-    );
-  }
+      this.route.navigate([rota]).then(_ => this.toastr.success("Pedido adicionado com sucesso", "Sucesso"))
+      
+      );
+    }
+    
+    validateInput() {
+    let erro = false;
 
-  validateInput() {
     if(this.pedido.itens == null || this.pedido.itens.length == 0){
-      let message = new Message();
-      message = new Message();
-      message.message = "É necessário adicionar ao menos um item ao pedido";
-      message.typeError = true;
-      this.messages.push(message);
+      this.toastr.error("É necessário adicionar ao menos um item ao pedido", "Erro");
+      erro = true;
     }
 
     if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.nome == null || this.pedido.cliente.nome == undefined){
-      let message = new Message();
-      message = new Message();
-      message.message = "É necessário informar o nome do Cliente";
-      message.typeError = true;
-      this.messages.push(message);
+      this.toastr.error("É necessário informar o nome do Cliente", "Erro");
+      erro = true;
     }
 
     if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.contato == null || this.pedido.cliente.contato == undefined){
-      let message = new Message();
-      message = new Message();
-      message.message = "É necessário informar o contacto do Cliente";
-      message.typeError = true;
-      this.messages.push(message);
+      this.toastr.error("É necessário informar o contacto do Cliente", "Erro");
+      erro = true;
     }
     
     if(this.pedido.cliente == null || this.pedido.cliente == undefined || this.pedido.cliente.endereco == null || this.pedido.cliente.endereco == undefined){
-      let message = new Message();
-      message = new Message();
-      message.message = "É necessário informar o Endereço do Cliente";
-      message.typeError = true;
-      this.messages.push(message);
+      this.toastr.error("É necessário informar o Endereço do Cliente", "Erro");
+      erro = true;
     }
 
-    if(this.messages.length > 0) {
+    if(erro)
       throw new Error();
+  }
+
+  validateAdd() {
+    let erro = false;
+    if(this.item.quantidade == null || this.item.quantidade == undefined || this.item.quantidade == NaN){
+      this.toastr.error("É necessário informar a quantidade", "Erro");
+      erro = true;
     }
+
+    if(this.item.valorVenda == null || this.item.valorVenda == undefined || this.item.valorVenda == NaN){
+      this.toastr.error("É necessário informar o valor unitário", "Erro");
+      erro = true;
+    }
+
+    if(this.item.altura == null || this.item.altura == undefined || this.item.altura == NaN){
+      this.toastr.error("É necessário informar a altura do produto", "Erro");
+      erro = true;
+    }
+
+    if(this.item.largura == null || this.item.largura == undefined || this.item.largura == NaN){
+      this.toastr.error("É necessário informar a largura do produto", "Erro");
+      erro = true;
+    }
+
+    if(this.produto == null || this.produto.descricao == undefined){
+      this.toastr.error("É necessário selecionar um Produto", "Erro");
+      erro = true;
+    }
+
+
+    if(erro)
+      throw new Error();
   }
 }

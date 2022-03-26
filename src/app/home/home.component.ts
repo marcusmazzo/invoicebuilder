@@ -31,17 +31,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.loading = false;
     this.list();
   }
-
+  
   list() {
-    this.clienteService.findVisitasAgendado().subscribe(response => this.visitas = response);
+    this.clienteService.findVisitas().subscribe(response => this.visitas = response);
     this.clienteService.findAllPedido().subscribe(response => this.pedidos = response);
     this.caixaService.findAll().subscribe(response => {
-      console.log(response);
-      
       this.pagamentos = response
+      this.loading = false;
     });
   }
 
@@ -54,11 +52,11 @@ export class HomeComponent implements OnInit {
   }
 
   cancelarVisita(visita: Visita){
-    this.clienteService.cancelarVisita(visita);
+    this.clienteService.cancelarVisita(visita).subscribe(response => this.ngOnInit());
   }
 
   confirmarVisita(visita: Visita){
-    this.clienteService.confirmarVisita(visita);
+    this.clienteService.confirmarVisita(visita).subscribe(response => this.ngOnInit());
   }
 
 }

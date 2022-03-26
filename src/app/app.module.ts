@@ -21,6 +21,9 @@ import { AuthGuard } from './guards/authguard';
 import { ClienteGuard } from './guards/clienteguard';
 import { RelatorioModule } from './relatorio/relatorio.module';
 import { CaixaModule } from './caixa/caixa.module';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TipoProdutoModule } from './tipo-produto/tipo-produto.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,14 @@ import { CaixaModule } from './caixa/caixa.module';
     ProdutoModule,
     RelatorioModule,
     CaixaModule,
-    TemplateModule
+    TipoProdutoModule,
+    TemplateModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 8000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     EmpresaService,

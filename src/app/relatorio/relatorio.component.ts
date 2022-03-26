@@ -86,7 +86,8 @@ export class RelatorioComponent implements OnInit {
               }
               garantias = value+garantias.slice(value.length+1)+"</div><br /><br /><br /><br /><br /><br />";
             }
-
+            console.log(garantias);
+            
             let informacao = (this.empresa.informacoes as string).replace("[[itens]]", itensDescricao).replace("[[garantias]]", garantias);
             
             this.information = this.sanitizer.bypassSecurityTrustHtml(informacao);
@@ -107,7 +108,7 @@ export class RelatorioComponent implements OnInit {
 
               let texto = (this.empresa.textoRecibo as string)
                 .replace("[[cliente]]", this.pedido.cliente.nome as string)
-                .replace("[[valor-pagamento]]", "€"+ pagamento.valorRecebido as string)
+                .replace("[[valor-pagamento]]", "€"+ valor as string)
                 .replace("[[valor-extenso]]", extenso(valor, { mode: 'currency', currency: { type: 'EUR' } }))
                 .replace("[[pedido]]", this.pedido.numeroPedido as string)
               this.recibo = this.sanitizer.bypassSecurityTrustHtml(texto);

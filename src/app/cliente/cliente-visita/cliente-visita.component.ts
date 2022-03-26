@@ -89,4 +89,12 @@ export class ClienteVisitaComponent implements OnInit {
     this.ngOnInit()
   }
 
+  cancelarVisita(visita: Visita){
+    this.service.cancelarVisita(visita).subscribe(response => this.ngOnInit());
+  }
+
+  confirmarVisita(visita: Visita){
+    this.service.confirmarVisita(visita).subscribe(response => this.ngOnInit());
+  }
+
 }

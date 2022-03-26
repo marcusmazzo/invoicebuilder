@@ -67,29 +67,22 @@
             </tr>
         </table>
         <table style="color: black; width: 100%; font-size: 15px;" *ngIf="!orcamento">
-            <tr>
-                <td colspan="2">
-                    Data: {{pedido.dataPedido | date: 'dd/MM/yyyy'}}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: right;">
-                    Att: {{pedido.cliente.nome}}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: right;">
-                    {{pedido.cliente.endereco}}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: center;">
+            <tr class="pb-5">
+                <td colspan="3" style="text-align: center; padding-bottom: 20px;">
                     <h1>Recibo {{pedido.numeroRecibo}}</h1>
                 </td>
             </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td></tr>
             <tr>
                 <td colspan="3" style="text-align: center;">
                     <div [innerHTML]="recibo"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Data: {{pedido.dataPedido | date: 'dd/MM/yyyy'}}
                 </td>
             </tr>
             <tr>

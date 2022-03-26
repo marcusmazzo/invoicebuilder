@@ -30,7 +30,7 @@
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="showPagamentos(pedido)" style="margin-right: 2px;">
                         <i class="fas fa-money-bill-wave"></i>
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="cancelarPedido(pedido)" style="margin-right: 2px;">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#pagamentoModal" (click)="cancelarPedido(pedido)" style="margin-right: 2px;" [disabled]="pedido.estadoPedido !== 'PEDIDO_CRIADO'">
                         <i class="fas fa-ban"></i>
                     </button>
                 </td>
@@ -42,7 +42,7 @@
 
 <div class="modal fade" id="pagamentoModal" tabindex="-1" role="dialog" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" >
-        <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
+        <div class="modal-content" style="width: 1200px !important; left: -300px !important; max-height: 780px; height: 780px; padding: 0px !important;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Orçamento <b>{{pedido.numeroPedido}}</b></h5>
                 <button class="btn btn-secondary btn-sm" (click)="download(pedido.id)" style="margin-right: 2px;">
@@ -62,88 +62,138 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="input-group" >
-                    <div class="form-group mb-1" style="width: 70%; margin-right: 5%;">
-                        <label class="form-label" style="color: black;">Nome:</label>
-                        <input type="text" class="form-control" [(ngModel)]="pedido.cliente.nome" name="nome" id="nome" disabled/>
-                    </div>
-                    <div class="form-check form-switch" style="width: 25%;">
-                        <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com IVA</label>
-                        <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()" [disabled]="pagamentos"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label style="color: black;">NIF:</label>
-                    <input type="text" class="form-control" [(ngModel)]="pedido.cliente.docIdentificacao" name="nif" id="nif" disabled/>
-                </div>
-                <div class="form-group mb-1">
-                    <label style="color: black;">Telefone:</label>
-                    <input type="text" class="form-control" name="telefone" [(ngModel)]="pedido.cliente.contato" disabled/>
-                </div>
-                <div class="input-group" >
-                    <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
-                        <label style="color: black;">Valor Total Pedido:</label>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido | currency}}</span>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva | currency}}</span>
-                    </div>
-                    <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
-                        <label style="color: black;">Valor Total Pago:</label>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">€ {{pedido.valorTotalPago | currency}}</span>
-                    </div>
-                    <div class="form-group mb-1" style="width: 30%;">
-                        <label style="color: black;">Saldo Devedor:</label>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
-                        <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva - pedido.valorTotalPago | currency}}</span>
-                    </div>
-
-                </div>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 70%; border-right: 1px solid #e9ecef; padding-right: 5px;">
+                            <div class="input-group" >
+                                <div class="form-group mb-1" style="width: 70%; margin-right: 5%;">
+                                    <label class="form-label" style="color: black;">Nome:</label>
+                                    <input type="text" class="form-control" [(ngModel)]="pedido.cliente.nome" name="nome" id="nome" disabled/>
+                                </div>
+                                <div class="form-check form-switch" style="width: 25%;">
+                                    <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com IVA</label>
+                                    <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()" [disabled]="pagamentos.length > 0"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary btn-sm" (click)="finalizarPedido()" *ngIf="pedido.estadoPedido !== 'CONCLUIDO'">
+                                            Finalizar Pedido
+                                            <i class="fa fa-clipboard-check" style="margin-left: 2px;;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: black;">NIF:</label>
+                                <input type="text" class="form-control" [(ngModel)]="pedido.cliente.docIdentificacao" name="nif" id="nif" disabled/>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label style="color: black;">Telefone:</label>
+                                <input type="text" class="form-control" name="telefone" [(ngModel)]="pedido.cliente.contato" disabled/>
+                            </div>
+                            <div class="input-group" >
+                                <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
+                                    <label style="color: black;">Valor Total Pedido:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva | currency}}</span>
+                                </div>
+                                <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
+                                    <label style="color: black;">Valor Total Pago:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">€ {{pedido.valorTotalPago | currency}}</span>
+                                </div>
+                                <div class="form-group mb-1" style="width: 30%;">
+                                    <label style="color: black;">Saldo Devedor:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva - pedido.valorTotalPago | currency}}</span>
+                                </div>
+    
+                            </div>
+                            <div class="input-group" >
+                                <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
+                                    <label style="color: black;">Data do Pedido:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" >{{pedido.dataPedido | date: 'dd/MM/yyyy'}}</span>
+                                </div>
+                                <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
+                                    <label style="color: black;">Previsão de Entrega:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">{{pedido.dataPrevisaoEntrega | date: 'dd/MM/yyyy'}}</span>
+                                </div>
+                                <div class="form-group mb-1" style="width: 30%;">
+                                    <label style="color: black;">Data de Entrega:</label>
+                                    <span style="text-align: left !important; background-color: #e9ecef; min-height: 38px;" class="form-control">{{pedido.dataEntrega | date: 'dd/MM/yyyy'}}</span>
+                                </div>
+    
+                            </div>
+                        </td>
+                        <td style="width: 30%; padding-left: 5px; vertical-align: top;">
+                            <div style="max-height: 330px; height: 330px; overflow: auto;">
+                                <table style="width: 100%; font-size: 11px;" class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="10" class="text-dark h6" style="text-align: center;">Itens do Pedido</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th class="text-center">Dimensão</th>
+                                            <th class="text-center">Quantidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of pedido.itens">
+                                            <td>{{item.produto}}</td>
+                                            <td class="text-center">A: {{item.altura}} x L: {{item.largura}} </td>
+                                            <td class="text-center">{{item.quantidade}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
                 <hr>
-                <div class="bg-secondary rounded text-white text-center pb-1 pt-1">Registrar Pagamento</div>
-                <div class="form-group">
-                    <label style="color: black;">Data de Pagamento: </label>
-                    <div class="input-group">
-                        <input class="form-control" placeholder="dd/mm/yyyy" mask="0{2}/0{2}/0{4}" id="date"
-                                name="d2" #c2="ngModel" [(ngModel)]="dataPagamento" ngbDatepicker #d2="ngbDatepicker" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
-                                <i class="fas fa-calendar-alt"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <div class="bg-secondary rounded text-white text-center pb-1 pt-1">Registrar Pagamento</div>
                     <div class="form-group">
-                        <label style="color: black;">Valor Pago:</label>
+                        <label style="color: black;">Data de Pagamento: </label>
                         <div class="input-group">
-                            <input type="text" currencyMask class="form-control" [(ngModel)]="pagamento.valorRecebido" name="valorRecebido" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0"/>
+                            <input class="form-control" placeholder="dd/mm/yyyy" mask="0{2}/0{2}/0{4}" id="date"
+                                    name="d2" #c2="ngModel" [(ngModel)]="dataPagamento" ngbDatepicker #d2="ngbDatepicker" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" (click)="salvar()" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
-                                    <i class="fas fa-save"></i>
-                                    Salvar
+                                <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
+                                    <i class="fas fa-calendar-alt"></i>
                                 </button>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label style="color: black;">Valor Pago:</label>
+                            <div class="input-group">
+                                <input type="text" currencyMask class="form-control" [(ngModel)]="pagamento.valorRecebido" name="valorRecebido" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0"/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" (click)="salvar()" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
+                                        <i class="fas fa-save"></i>
+                                        Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <hr class="mb-2">
-                
-                <div class="bg-secondary rounded text-white text-center pb-1 pt-1">Pagamentos Efetuados</div>
-                <div class="form-group">
-                    <div style="max-height: 95px; height: 95px; overflow: auto;">
-                        <table class="table table-sm table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Data de Pagamento</th>
-                                    <th>Valor Pago</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let pag of pagamentos">
-                                    <td>{{pag.dataPagamento | date: 'dd/MM/yyyy'}}</td>
-                                    <td>€ {{pag.valorRecebido | currency}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <hr class="mb-2">
+                    
+                    <div class="bg-secondary rounded text-white text-center pb-1 pt-1">Pagamentos Efetuados</div>
+                    <div class="form-group">
+                        <div style="max-height: 95px; height: 95px; overflow: auto;">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Data de Pagamento</th>
+                                        <th>Valor Pago</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let pag of pagamentos">
+                                        <td>{{pag.dataPagamento | date: 'dd/MM/yyyy'}}</td>
+                                        <td>€ {{pag.valorRecebido | currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -210,9 +260,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="upload()">Enviar</button>
             </div>
         </div>
     </div>
