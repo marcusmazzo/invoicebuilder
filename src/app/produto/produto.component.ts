@@ -76,7 +76,7 @@ export class ProdutoComponent implements OnInit {
       erro = true;
     }
 
-    if(this.produto == null || this.produto.tipoProduto.descricao == null || this.produto.tipoProduto.descricao == undefined) {
+    if(this.produto == null || this.produto.tipoProduto.id == null || this.produto.tipoProduto.id == undefined) {
       this.toastr.error("É preciso informar um tipo de produto.", "Erro");
       erro = true;
     }

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: "https://localhost:9000/invoice"
+  baseUrl: "http://vps-034abdfe.vps.ovh.net:9000/invoice"
 };
