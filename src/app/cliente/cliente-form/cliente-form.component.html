@@ -22,7 +22,8 @@
                                 <input type="text" class="form-control" [(ngModel)]="cliente.nome" name="nome" id="nome" required/>
                             </div>
                             <div class="form-group">
-                                <label style="color: black;">NIF:</label>
+                                <label style="color: black;" *ngIf="cliente.empresa.country === 'PT'">NIF:</label>
+                                <label style="color: black;" *ngIf="cliente.empresa.country === 'BR'">CNPJ:</label>
                                 <input type="text" class="form-control" [(ngModel)]="cliente.docIdentificacao" name="nif" id="nif" required/>
                             </div>
                             <div class="form-group">
@@ -100,7 +101,10 @@
                                         <td>
                                             <div class="form-group">
                                                 <label style="color: black;">Valor Unitário:</label>
-                                                <input type="text" currencyMask class="form-control" [(ngModel)]="item.valorVenda" name="valorUnitario" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="currencySymbol">{{cliente.empresa.currencySymbol}}</span>
+                                                    <input type="text" currencyMask class="form-control" [(ngModel)]="item.valorVenda" name="valorUnitario" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -108,19 +112,28 @@
                                         <td>
                                             <div class="form-group">
                                                 <label style="color: black;">Custo Produto:</label>
-                                                <input type="text" currencyMask class="form-control" [(ngModel)]="item.custoFabricacao" name="custo" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }"/>
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="currencySymbol">{{cliente.empresa.currencySymbol}}</span>
+                                                    <input type="text" currencyMask class="form-control" [(ngModel)]="item.custoFabricacao" name="custo" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label style="color: black;">Custo Total:</label>
-                                                <div class="form-control" aria-disabled="true">€{{item.custoFabricacao*item.quantidade | currency}}</div>
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="currencySymbol">{{cliente.empresa.currencySymbol}}</span>
+                                                    <div class="form-control" aria-disabled="true">{{item.custoFabricacao*item.quantidade | currency}}</div>
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label style="color: black;">Total Venda:</label>
-                                                <div class="form-control" aria-disabled="true">€{{item.valorVenda*item.quantidade | currency}}</div>
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="currencySymbol">{{cliente.empresa.currencySymbol}}</span>
+                                                    <div class="form-control" aria-disabled="true">{{item.valorVenda*item.quantidade | currency}}</div>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -181,10 +194,10 @@
                                                     <td>{{item.produto}}</td>
                                                     <td>A: {{item.altura}} x L: {{item.largura}} </td>
                                                     <td>{{item.quantidade}}</td>
-                                                    <td>€ {{item.custoFabricacao | currency}}</td>
-                                                    <td>€ {{item.valorVenda | currency}}</td>
-                                                    <td>€ {{item.custoFabricacao * item.quantidade | currency}}</td>
-                                                    <td>€ {{item.valorVenda * item.quantidade | currency}}</td>
+                                                    <td>{{cliente.empresa.currencySymbol}} {{item.custoFabricacao | currency}}</td>
+                                                    <td>{{cliente.empresa.currencySymbol}} {{item.valorVenda | currency}}</td>
+                                                    <td>{{cliente.empresa.currencySymbol}} {{item.custoFabricacao * item.quantidade | currency}}</td>
+                                                    <td>{{cliente.empresa.currencySymbol}} {{item.valorVenda * item.quantidade | currency}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -205,15 +218,15 @@
                                                 Valor Total Pedido
                                             </td>
                                             <td>
-                                                € {{pedido.valorTotal | currency}}
+                                                {{cliente.empresa.currencySymbol}} {{pedido.valorTotal | currency}}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                Valor Total Pedido c/ IVA
+                                                Valor Total Pedido c/ {{cliente.empresa.country === 'PT' ? 'IVA' : 'Imposto'}}
                                             </td>
                                             <td>
-                                                € {{pedido.valorTotal * 1.23 | currency}}
+                                                {{cliente.empresa.currencySymbol}} {{pedido.valorTotal * 1.23 | currency}}
                                             </td>
                                         </tr>
                                     </table>

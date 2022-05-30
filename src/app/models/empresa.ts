@@ -16,6 +16,8 @@ export class Empresa{
     percentualLucro: number
     percentualIva: number
     iban: string
+    country: string;
+    currencySymbol: string;
     
 
     constructor(

@@ -1,10 +1,12 @@
 <app-navbar></app-navbar>
-<app-sidebar></app-sidebar>
-<main id="main" class="main" style="margin-bottom: 70px;">
-    <router-outlet></router-outlet>
-</main>
-<div style="position: fixed; left: 0; bottom: 0; width: 100%;text-align: center; z-index: 999999;">
-    <footer class="py-4 bg-light mt-auto">
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <main id="main" class="main main84" style="margin-bottom: 70px;">
+        <router-outlet></router-outlet>
+    </main>
+</div>
+<div style="position: fixed; left: 0; bottom: 0; width: 100%;text-align: center; z-index: 300; max-height: 30px;">
+    <footer class="bg-light mt-auto">
         <div class="container-fluid">
             <div class="d-flex align-items-center justify-content-between small">
                 <div class="text-muted">Copyright &copy; Your Website 2019</div>

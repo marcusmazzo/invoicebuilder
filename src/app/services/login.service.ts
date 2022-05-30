@@ -15,7 +15,8 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   authenticate(user:User): Observable<Authentication> {
-    return this.http.post<Authentication>(this.baseUrl+"/login", user);
+    
+    return this.http.post<Authentication>(this.baseUrl+"/login", user, {});
   }
 
   refreshToken(): Observable<Authentication> {

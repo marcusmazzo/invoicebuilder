@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CaixaService } from '../services/caixa.service';
 import { Pagamento } from '../models/pagamento';
 import extenso from 'node_modules/extenso/dist/extenso'
+import { Documentos } from '../models/documentos';
 
 @Component({
   selector: 'app-relatorio',
@@ -35,15 +36,7 @@ export class RelatorioComponent implements OnInit {
   now: Date
   orcamento: boolean
   recibo: any = ''
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      window.print();
-    }, 250);
-    setTimeout(() => {
-      window.close();
-    }, 500);
-  }
+  documentos: Documentos[]
 
   ngOnInit(): void {
     this.now = new Date();
@@ -63,34 +56,56 @@ export class RelatorioComponent implements OnInit {
             this.pedido = response
             let cliente: Cliente = new Cliente();
             cliente.id = parseInt(param['idCliente']);
-            this.clienteService.findById(cliente).subscribe(response => this.pedido.cliente = response);
-            let itensDescricao = "";
-            let garantias = "<ul>";
-            this.pedido.itens.forEach(item => {
-              itensDescricao += item.descricaoProduto+"<br />";
-              garantias += "<li>"+item.garantia+"</li>";
-            })
-            garantias += "</ul>"
-            
-            if(garantias.length > 1000) {
-              let value = "<div class='page-break text-justify' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>";
-              let index = 0;
-              for(let i=0; i < garantias.length; i++){
-                value += garantias.charAt(i);
-                index++;
+            this.clienteService.findById(cliente).subscribe(response => 
+            {
+                this.pedido.cliente = response
+                let itensDescricao = "";
+                let garantias = "<ul>";
+                this.pedido.itens.forEach(item => {
+                  itensDescricao += item.descricaoProduto+"<br />";
+                  garantias += "<li>"+item.garantia+"</li>";
+                })
+                garantias += "</ul>"
+                
+                
+                let images = "<table>"
+                let index = 1;
+                this.pedido.imagens.forEach(imagem => {
+                  if(index == 4) {
+                    images += "</tr>"
+                    index = 1;
+                  }
+                  if(index == 1) {
+                    images +="<tr>"
+                  }
+                  images += "<td style=\"padding-right: 5px; padding-bottom: 5px\"> <img src=\"data:image/*;base64,"+imagem.contratoBase64+"\" width=\"300\" height=\"300\" /></td>";
+                  index++;
+                })
+                images += "</tr>";
+                
+                if(garantias.length > 1000) {
+                  let value = "<div class='page-break text-justify' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>";
+                  let index = 0;
+                  for(let i=0; i < garantias.length; i++){
+                    value += garantias.charAt(i);
+                    index++;
 
-                if(index > 1930 && garantias.charAt(i) === " "){
-                  value += "</div><br /><br /><br /><br /><br /><br /><div class='page-break' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>"
-                  index = 0;
+                    if(index > 1930 && garantias.charAt(i) === " "){
+                      value += "</div><br /><br /><br /><br /><br /><br /><div class='page-break' style='page-break-after:always; text-align: justify; text-justify: inter-word;'>"
+                      index = 0;
+                    }
+                  }
+                  garantias = value+garantias.slice(value.length+1)+"</div><br /><br /><br /><br /><br /><br />";
                 }
-              }
-              garantias = value+garantias.slice(value.length+1)+"</div><br /><br /><br /><br /><br /><br />";
-            }
-            console.log(garantias);
+                
+                
+                let informacao = (this.empresa.informacoes as string).replace("[[itens]]", itensDescricao).replace("[[garantias]]", garantias).replace("[[images]]", images);
+                
+                this.information = this.sanitizer.bypassSecurityTrustHtml(informacao);
+
+                this.print();
+             });
             
-            let informacao = (this.empresa.informacoes as string).replace("[[itens]]", itensDescricao).replace("[[garantias]]", garantias);
-            
-            this.information = this.sanitizer.bypassSecurityTrustHtml(informacao);
           })
         } else {
           this.caixaService.findById(idPedido).subscribe(response => {
@@ -106,20 +121,23 @@ export class RelatorioComponent implements OnInit {
                 valor = valor+"0";
               }
 
+              let country: String = "EUR"
+              if(this.pedido.cliente.empresa.country === 'BR') {
+                country = "BRL";
+              }
+
               let texto = (this.empresa.textoRecibo as string)
                 .replace("[[cliente]]", this.pedido.cliente.nome as string)
-                .replace("[[valor-pagamento]]", "€"+ valor as string)
-                .replace("[[valor-extenso]]", extenso(valor, { mode: 'currency', currency: { type: 'EUR' } }))
+                .replace("[[valor-pagamento]]", this.pedido.cliente.empresa.currencySymbol+ valor as string)
+                .replace("[[valor-extenso]]", extenso(valor, { mode: 'currency', currency: { type: country } }))
                 .replace("[[pedido]]", this.pedido.numeroPedido as string)
               this.recibo = this.sanitizer.bypassSecurityTrustHtml(texto);
+              this.print();
             });
           })
         }
       }  
     });
-        
-    
-
   }
 
   mock() { 
@@ -146,6 +164,15 @@ export class RelatorioComponent implements OnInit {
     this.pedido.itens.push(item);
     this.pedido.valorTotalPedido = 100;
     this.pedido.valorTotalIva = this.pedido.valorTotalPedido * (1+(this.empresa.percentualIva/100));
+  }
+
+  print() {
+    setTimeout(() => {
+      window.print();
+    }, 10);
+    setTimeout(() => {
+      window.close();
+    }, 10);
   }
 
 }

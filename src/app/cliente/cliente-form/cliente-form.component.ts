@@ -39,7 +39,8 @@ export class ClienteFormComponent implements OnInit {
     } else {
       this.cliente = this.service.getCliente();
     }
-
+    this.cliente.empresa = JSON.parse(localStorage.getItem("empresa"));
+    
     this.pedido = new Pedido();
     this.pedido.cliente = this.cliente;
     this.pedido.valorTotal = 0;
@@ -129,6 +130,11 @@ export class ClienteFormComponent implements OnInit {
 
   validateAdd() {
     let erro = false;
+    if(this.produto == null || this.produto.descricao == undefined){
+      this.toastr.error("É necessário selecionar um Produto", "Erro");
+      erro = true;
+    }
+
     if(this.item.quantidade == null || this.item.quantidade == undefined || this.item.quantidade == NaN){
       this.toastr.error("É necessário informar a quantidade", "Erro");
       erro = true;
@@ -139,21 +145,17 @@ export class ClienteFormComponent implements OnInit {
       erro = true;
     }
 
-    if(this.item.altura == null || this.item.altura == undefined || this.item.altura == NaN){
-      this.toastr.error("É necessário informar a altura do produto", "Erro");
-      erro = true;
+    if(this.produto.exigeDimensao) {
+      if(this.item.altura == null || this.item.altura == undefined || this.item.altura == NaN){
+        this.toastr.error("É necessário informar a altura do produto", "Erro");
+        erro = true;
+      }
+  
+      if(this.item.largura == null || this.item.largura == undefined || this.item.largura == NaN){
+        this.toastr.error("É necessário informar a largura do produto", "Erro");
+        erro = true;
+      }
     }
-
-    if(this.item.largura == null || this.item.largura == undefined || this.item.largura == NaN){
-      this.toastr.error("É necessário informar a largura do produto", "Erro");
-      erro = true;
-    }
-
-    if(this.produto == null || this.produto.descricao == undefined){
-      this.toastr.error("É necessário selecionar um Produto", "Erro");
-      erro = true;
-    }
-
 
     if(erro)
       throw new Error();

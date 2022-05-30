@@ -49,6 +49,10 @@
                     Orçamento
                     <i class="fa fa-download" aria-hidden="true"></i>
                 </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadModalImage" style="margin-right: 2px;" (click)="showDocumentosImagem()">
+                    Imagens
+                    <i class="fas fa-upload"></i>
+                </button>
                 <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reciboModal" style="margin-right: 2px;">
                     Recibo
                     <i class="fa fa-download" aria-hidden="true"></i>
@@ -71,7 +75,7 @@
                                     <input type="text" class="form-control" [(ngModel)]="pedido.cliente.nome" name="nome" id="nome" disabled/>
                                 </div>
                                 <div class="form-check form-switch" style="width: 25%;">
-                                    <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com IVA</label>
+                                    <label for="pagamentoComIva" class="form-label" style="color: black;">Pagamento com {{pedido.cliente.empresa.country === 'PT' ? 'IVA' : 'Imposto'}}</label>
                                     <input class="form-check-input form-control" type="checkbox" [(ngModel)]="pedido.pagamentoComIva" name="pagamentoComIva" id="pagamentoComIva" (click)="pagamentoComIva()" [disabled]="pagamentos.length > 0"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-secondary btn-sm" (click)="finalizarPedido()" *ngIf="pedido.estadoPedido !== 'CONCLUIDO'">
@@ -82,7 +86,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label style="color: black;">NIF:</label>
+                                <label style="color: black;" *ngIf="pedido.cliente.empresa.country === 'PT'">NIF:</label>
+                                <label style="color: black;" *ngIf="pedido.cliente.empresa.country === 'BR'">CNPJ:</label>
                                 <input type="text" class="form-control" [(ngModel)]="pedido.cliente.docIdentificacao" name="nif" id="nif" disabled/>
                             </div>
                             <div class="form-group mb-1">
@@ -92,17 +97,17 @@
                             <div class="input-group" >
                                 <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
                                     <label style="color: black;">Valor Total Pedido:</label>
-                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido | currency}}</span>
-                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">{{pedido.cliente.empresa.currencySymbol}} {{pedido.valorTotalPedido | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">{{pedido.cliente.empresa.currencySymbol}} {{pedido.valorTotalPedidoIva | currency}}</span>
                                 </div>
                                 <div class="form-group mb-1" style="width: 30%; margin-right: 5%;">
                                     <label style="color: black;">Valor Total Pago:</label>
-                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">€ {{pedido.valorTotalPago | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control">{{pedido.cliente.empresa.currencySymbol}} {{pedido.valorTotalPago | currency}}</span>
                                 </div>
                                 <div class="form-group mb-1" style="width: 30%;">
                                     <label style="color: black;">Saldo Devedor:</label>
-                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">€ {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
-                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">€ {{pedido.valorTotalPedidoIva - pedido.valorTotalPago | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="!pedido.pagamentoComIva">{{pedido.cliente.empresa.currencySymbol}} {{pedido.valorTotalPedido - pedido.valorTotalPago | currency}}</span>
+                                    <span style="text-align: left !important; background-color: #e9ecef;" class="form-control" *ngIf="pedido.pagamentoComIva">{{pedido.cliente.empresa.currencySymbol}} {{pedido.valorTotalPedidoIva - pedido.valorTotalPago | currency}}</span>
                                 </div>
     
                             </div>
@@ -138,7 +143,8 @@
                                     <tbody>
                                         <tr *ngFor="let item of pedido.itens">
                                             <td>{{item.produto}}</td>
-                                            <td class="text-center">A: {{item.altura}} x L: {{item.largura}} </td>
+                                            <td class="text-center" *ngIf="item.altura">A: {{item.altura}} x L: {{item.largura}} </td>
+                                            <td class="text-center" *ngIf="!item.altura"></td>
                                             <td class="text-center">{{item.quantidade}}</td>
                                         </tr>
                                     </tbody>
@@ -163,7 +169,8 @@
                         <div class="form-group">
                             <label style="color: black;">Valor Pago:</label>
                             <div class="input-group">
-                                <input type="text" currencyMask class="form-control" [(ngModel)]="pagamento.valorRecebido" name="valorRecebido" [options]="{ prefix: '€ ', thousands: '.', decimal: ',' }" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0"/>
+                                <span class="input-group-text" id="currencySymbol">{{pedido.cliente.empresa.currencySymbol}}</span>
+                                <input type="text" currencyMask class="form-control" [(ngModel)]="pagamento.valorRecebido" name="valorRecebido" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0"/>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" (click)="salvar()" [disabled]="pedido.valorTotalPedido - pedido.valorTotalPago <= 0">
                                         <i class="fas fa-save"></i>
@@ -188,7 +195,7 @@
                                 <tbody>
                                     <tr *ngFor="let pag of pagamentos">
                                         <td>{{pag.dataPagamento | date: 'dd/MM/yyyy'}}</td>
-                                        <td>€ {{pag.valorRecebido | currency}}</td>
+                                        <td>{{pedido.cliente.empresa.currencySymbol}} {{pag.valorRecebido | currency}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -230,6 +237,37 @@
     </div>
 </div>
 
+<div class="modal fade" id="uploadModalImage" tabindex="-1" role="dialog" aria-labelledby="uploadModalImageLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Imagens de <b>{{pedido.numeroPedido}}</b></h5>
+                <button type="button" class="close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#pagamentoModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*" (change)="prepareUpload($event.target.files)"/>
+
+                <hr class="mb-5">
+                <table class="table table-sm table-striped">
+                    <tr *ngFor="let documento of images">
+                        <td>{{documento.nomeDocumento}}</td>
+                        <td>
+                            <button (click)="downloadContrato(documento)">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="uploadImagem()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="reciboModal" tabindex="-1" role="dialog" aria-labelledby="reciboModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" >
         <div class="modal-content" style="width: 800px !important; left: -100px !important; max-height: 700px; height: 700px; padding: 0px !important;">
@@ -251,7 +289,7 @@
                     <tbody>
                         <tr *ngFor="let pagamento of pagamentos">
                             <td>{{pagamento.numeroPagamento}}</td>
-                            <td>€ {{pagamento.valorRecebido | currency}}</td>
+                            <td>{{pedido.cliente.empresa.currencySymbol}} {{pagamento.valorRecebido | currency}}</td>
                             <td>
                                 <button (click)="downloadRecibo(pagamento.id)">
                                     <i class="fa fa-download" aria-hidden="true"></i>

@@ -7,5 +7,6 @@ export class Produto {
     custoMedio: number;
     descricaoCompleta: String
     garantia: String
+    exigeDimensao: boolean;
 
 }

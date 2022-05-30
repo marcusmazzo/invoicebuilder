@@ -23,6 +23,7 @@ export class CaixaComponent implements OnInit {
   pagamento: Pagamento;
   pagamentos: Pagamento[];
   documentos: Documentos[]
+  images: Documentos[]
   message: String;
   erro: Boolean;
   totalPedido: number
@@ -33,14 +34,14 @@ export class CaixaComponent implements OnInit {
   ngOnInit(): void {
     this.erro = false;
     this.clienteService.findAllPedido().subscribe(response => {
-      console.log(response);
-      
       this.pedidos = response
     });
     this.pagamento = new Pagamento();
     this.pagamentos = [];
     this.pedido = new Pedido();
     this.pedido.cliente = new Cliente();
+    this.pedido.cliente.empresa = JSON.parse(localStorage.getItem("empresa"));      
+
     this.pedido.itens = []
     let now: Date = new Date();
     this.dataPagamento = new NgbDate(now.getFullYear(), now.getMonth()+1, now.getDate());
@@ -99,10 +100,32 @@ export class CaixaComponent implements OnInit {
     );
   }
 
+  uploadImagem() {
+    if(this.files == null || this.files.length == 0){
+      this.toastr.error("É preciso escolher um ficheiro para ser carregado.", "Erro");
+      throw new Error()
+    }
+
+    this.service.uploadImagem(this.pedido, this.files).subscribe(
+      event => {
+          this.showDocumentosImagem();
+          this.toastr.success("Ficheiro carregado com sucesso.", "Sucesso");
+      }
+    );
+  }
+
   showDocumentos() {
     this.service.showDocumentos(this.pedido).subscribe(
       response => {
         this.documentos = response;
+      }
+    )
+  }
+
+  showDocumentosImagem() {
+    this.service.showDocumentosImagem(this.pedido).subscribe(
+      response => {
+        this.images = response;
       }
     )
   }

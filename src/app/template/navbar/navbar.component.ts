@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Empresa } from 'src/app/models/empresa';
+import { NavbarService } from 'src/app/services/navbar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,7 @@ import { Empresa } from 'src/app/models/empresa';
 export class NavbarComponent implements OnInit {
   empresa: Empresa = new Empresa();
 
-  constructor(private route: Router) { 
+  constructor(public navbarService: NavbarService, private route: Router) { 
     if(localStorage.getItem("empresa") != null){
       this.empresa = JSON.parse(localStorage.getItem("empresa"))
     }

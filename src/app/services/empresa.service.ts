@@ -22,7 +22,12 @@ export class EmpresaService {
   }
 
   saveLogin(empresa:Empresa) : Observable<Empresa> {
-    
+    if(empresa.country === "PT") {
+      empresa.currencySymbol = "€";
+    }
+    if(empresa.country === "BR") {
+      empresa.currencySymbol = "R$";
+    }
     return this.http.post<Empresa>(this.baseUrl+"/empresa/salvar/login", empresa);
   }
 

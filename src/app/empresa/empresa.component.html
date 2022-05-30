@@ -21,11 +21,13 @@
                                 <input type="text" class="form-control" [(ngModel)]="empresa.nome" name="nome" required/>
                             </div>
                             <div class="form-group">
-                                <label style="color: black;">NIPC:</label>
+                                <label style="color: black;" *ngIf="empresa.country === 'PT'">NIPC:</label>
+                                <label style="color: black;" *ngIf="empresa.country === 'BR'">CNPJ:</label>
                                 <input type="text" class="form-control" [(ngModel)]="empresa.nipc" name="npic" required/>
                             </div>
                             <div class="form-group">
-                                <label style="color: black;">IBAN:</label>
+                                <label style="color: black;" *ngIf="empresa.country === 'PT'">IBAN:</label>
+                                <label style="color: black;" *ngIf="empresa.country === 'BR'">Conta Corrente:</label>
                                 <input type="text" class="form-control" [(ngModel)]="empresa.iban" name="iban" required/>
                             </div>
                             <div class="form-group">
@@ -116,7 +118,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group mb-2">
-                                    <label style="color: black;">Percentual de Iva:</label>
+                                    <label style="color: black;" *ngIf="empresa.country === 'PT'">Percentual de Iva:</label>
+                                    <label style="color: black;" *ngIf="empresa.country === 'BR'">Percentual de Imposto:</label>
                                     <div class="input-group">
                                         <input type="text" currencyMask class="form-control" name="iva" [(ngModel)]="empresa.percentualIva" [options]="{ prefix: ' ', thousands: '.', decimal: ',' }"/>
                                         <span class="input-group-text">%</span>
@@ -194,11 +197,11 @@
                                                         <td>{{item.produto}}</td>
                                                         <td>{{item.quantidade}}</td>
                                                         <td>A: {{item.altura}} x L: {{item.largura}} </td>
-                                                        <td>{{item.totalItem | currency}}€</td>
+                                                        <td>{{item.totalItem | currency}} {{empresa.currencySymbol}}</td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3" class="text-left">Total</td>
-                                                        <td>{{pedido.valorTotalPedido | currency }}€</td>
+                                                        <td>{{pedido.valorTotalPedido | currency }} {{empresa.currencySymbol}}</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -307,11 +310,13 @@
                 <ul class="text-justify">
                     <li><span style="font-weight: bold; ">[[itens]]</span> - inserir descrição de itens do pedido no texto</li>
                     <li><span style="font-weight: bold; ">[[cliente]]</span> - inserir nome do cliente no texto</li>
-                    <li><span style="font-weight: bold; ">[[morada]]</span> - inserir dados da morada no texto</li>
                     <li><span style="font-weight: bold; ">[[garantias]]</span> - inserir informação de garantia para cada item do pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[images]]</span> - inserir imagens do pedido no texto</li>
+                    <li><span style="font-weight: bold; ">[[morada]]</span> - inserir dados da morada no texto</li>
+                    <li><span style="font-weight: bold; ">[[pedido]]</span> - inserir informação do número pedido no texto</li>
                     <li><span style="font-weight: bold; ">[[valor-pagamento]]</span> - inserir informação do valor pago referente ao pedido no texto</li>
                     <li><span style="font-weight: bold; ">[[valor-extenso]]</span> - inserir informação do valor pago, por extenso, referente ao pedido no texto</li>
-                    <li><span style="font-weight: bold; ">[[pedido]]</span> - inserir informação do número pedido no texto</li>
+                    
                 </ul>
             </div>
             <div class="modal-footer">

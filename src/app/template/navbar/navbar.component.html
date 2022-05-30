@@ -5,9 +5,9 @@
             <img src="assets/logo.png" alt="">
         <span class="d-none d-lg-block">Invoice Builder</span>
       </a>
-      <a data-bs-toggle="collapse" data-bs-target="#sidebar" aria-expanded="true" aria-controls="sidebar" role="button" class="toggle-sidebar-btn" onclick="sidebarClick()">
+      <button  type="button" class="toggle-sidebar-btn" (click)="navbarService.toggleSideNav();" onclick="sidebarClick()">
         <i class="bi bi-list"></i>
-      </a>
+      </button>
     </div><!-- End Logo -->
   
     <nav class="header-nav ms-auto">

@@ -15,7 +15,8 @@
                     <th>Endereço</th>
                     <th>Contato</th>
                     <th>Email</th>
-                    <th>NIF</th>
+                    <th *ngIf="cliente.empresa.country === 'PT'">NIF</th>
+                    <th *ngIf="cliente.empresa.country === 'BR'">CNPJ</th>
                 </tr>
             </thead>
             <tbody style="border-collapse: separate !important; border-spacing:0 20px !important;">
@@ -92,7 +93,7 @@
                                                             <th>Valor Unitário</th>
                                                             <th>Custo Total</th>
                                                             <th>Valor Total</th>
-                                                            <th>Valor Total c/ IVA</th>
+                                                            <th>Valor Total c/ {{cliente.empresa.country === 'PT' ? 'IVA' : 'Imposto'}}</th>
                                                             <th>Lucro</th>
                                                             <th>%</th>
                                                         </tr>
@@ -103,11 +104,11 @@
                                                             <td>A: {{item.altura}} x L: {{item.largura}} </td>
                                                             <td>€ {{item.custoFabricacao | currency}}</td>
                                                             <td>{{item.quantidade}}</td>
-                                                            <td>€ {{item.valorVenda | currency}}</td>
-                                                            <td>€ {{item.custoFabricacao * item.quantidade | currency}}</td>
-                                                            <td>€ {{item.totalItem | currency}}</td>
-                                                            <td>€ {{item.totalItem*1.23 | currency}}</td>
-                                                            <td>€ {{item.totalItem - (item.custoFabricacao*item.quantidade) | currency}}</td>
+                                                            <td>{{pedido.cliente.empresa.currencySymbol}} {{item.valorVenda | currency}}</td>
+                                                            <td>{{pedido.cliente.empresa.currencySymbol}} {{item.custoFabricacao * item.quantidade | currency}}</td>
+                                                            <td>{{pedido.cliente.empresa.currencySymbol}} {{item.totalItem | currency}}</td>
+                                                            <td>{{pedido.cliente.empresa.currencySymbol}} {{item.totalItem*1.23 | currency}}</td>
+                                                            <td>{{pedido.cliente.empresa.currencySymbol}} {{item.totalItem - (item.custoFabricacao*item.quantidade) | currency}}</td>
                                                             <td>{{((item.totalItem / (item.custoFabricacao*item.quantidade))-1) * 100 | currency}}% </td>
                                                         </tr>
                                                     </tbody>
@@ -123,11 +124,11 @@
                                             <table style="width: 100%;">
                                                 <tr>
                                                     <td style="width: 85%; font-weight: bold;">Valor Total</td>
-                                                    <td>{{pedido.valorTotalPedido | currency }}€</td>
+                                                    <td>{{pedido.valorTotalPedido | currency }} {{pedido.cliente.empresa.currencySymbol}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width: 85%; font-weight: bold;">Valor Total c/ IVA</td>
-                                                    <td>{{pedido.valorTotalPedido*(1+(pedido.empresa.percentualIva/100)) | currency }}€</td>
+                                                    <td style="width: 85%; font-weight: bold;">Valor Total c/ {{cliente.empresa.country === 'PT' ? 'IVA' : 'Imposto'}}</td>
+                                                    <td>{{pedido.valorTotalPedido*(1+(pedido.empresa.percentualIva/100)) | currency }} {{pedido.cliente.empresa.currencySymbol}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 85%; font-weight: bold;">Download Orçamento</td>

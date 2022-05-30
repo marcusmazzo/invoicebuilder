@@ -42,19 +42,20 @@
                         <tr *ngFor="let item of pedido.itens">
                             <td>{{item.produto}}</td>
                             <td>{{item.quantidade}}</td>
-                            <td>A: {{item.altura}} x L: {{item.largura}} </td>
-                            <td style="text-align: right;">{{item.totalItem | currency}}€</td>
+                            <td *ngIf="item.altura">A: {{item.altura}} x L: {{item.largura}} </td>
+                            <td *ngIf="!item.altura"></td>
+                            <td style="text-align: right;">{{item.totalItem | currency}} {{pedido.cliente.empresa.currencySymbol}}</td>
                         </tr>
                     </table>
                     <table style="width: 100%;">
                         <tr *ngIf="pedido.pagamentoComIva">
-                            <td style="width: 67%;">Valor IVA</td>
-                            <td style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva - pedido.valorTotalPedido | currency }}€</td>
+                            <td style="width: 67%;">Valor {{cliente.empresa.country === 'PT' ? 'IVA' : 'Imposto'}}</td>
+                            <td style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva - pedido.valorTotalPedido | currency }} {{pedido.cliente.empresa.currencySymbol}}</td>
                         </tr>
                         <tr>
                             <td style="width: 67%;">Total</td>
-                            <td *ngIf="pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva  | currency }}€</td>
-                            <td *ngIf="!pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedido  | currency }}€</td>
+                            <td *ngIf="pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedidoIva  | currency }} {{pedido.cliente.empresa.currencySymbol}}</td>
+                            <td *ngIf="!pedido.pagamentoComIva" style="width: 33%; text-align: right;">{{pedido.valorTotalPedido  | currency }} {{pedido.cliente.empresa.currencySymbol}}</td>
                         </tr>
                     </table>
 

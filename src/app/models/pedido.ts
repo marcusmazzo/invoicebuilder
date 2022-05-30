@@ -1,4 +1,5 @@
 import { Cliente } from "./cliente"
+import { Documentos } from "./documentos"
 import { Item } from "./item"
 
 export class Pedido {
@@ -23,4 +24,5 @@ export class Pedido {
     valorTotalPago: number;
     statusPedido: string;
     numeroRecibo: string;
+    imagens: Documentos[]
 }

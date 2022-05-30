@@ -15,6 +15,7 @@ import { Observable, throwError } from 'rxjs';
 import { ErrorResponse } from './errorresponse';
 import { Authentication } from './login/authentication';
 import { Router } from '@angular/router';
+import { Empresa } from './models/empresa';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -23,10 +24,11 @@ export class TokenInterceptor implements HttpInterceptor {
 
   constructor(private auth: LoginService, private route: Router) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let newRequest = request.clone({
+    let empresa: Empresa = JSON.parse(localStorage.getItem("empresa"));
+    let newRequest = null;
+    newRequest = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.auth.getToken()}`, 
-        empresa: `${this.auth.getEmpresa()}`
+        "Authorization": 'Bearer '+this.auth.getToken()
       }
     });
     

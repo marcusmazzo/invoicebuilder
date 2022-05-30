@@ -31,16 +31,20 @@ export class LoginComponent implements OnInit {
   onSubmit(){
     this.service.authenticate(this.user).subscribe(
       response => {
+        console.log(response);
+        
         this.auth = response;
         localStorage.setItem('refreshToken', this.auth.refreshToken);
         localStorage.setItem('accessToken', this.auth.accessToken);
-        this.empresaService.findByToken().subscribe( response => {
-          console.log(response);
+        this.empresaService.findByToken().subscribe( resp => {
+          console.log(resp);
           
-          localStorage.setItem("empresa", JSON.stringify(response));
+          localStorage.setItem("empresa", decodeURIComponent(JSON.stringify(resp)));
           this.router.navigate(["/home"]);
         });
       } , errorResponse => {
+        console.log(errorResponse);
+        
         this.hasError = true;
         this.error = errorResponse.error;
       }

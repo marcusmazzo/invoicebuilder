@@ -52,8 +52,28 @@ export class CaixaService {
     return req;
   }
 
+  uploadImagem(pedido: Pedido, files: FileList) : Observable<HttpEvent<any>>{
+    const formData: FormData = new FormData();
+    for(let i = 0; i < files.length; i++){
+      formData.append('files', files[i]);
+    }
+    formData.append("pedido", pedido.id.toString());
+
+    const req = this.http.post(this.baseUrl+"/file/imagem", formData, {
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'json'
+    });
+
+    return req;
+  }
+
   showDocumentos(pedido: Pedido): Observable<Documentos[]> {
     return this.http.get<Documentos[]>(this.baseUrl+"/file/pedido/"+pedido.id);
+  }
+
+  showDocumentosImagem(pedido: Pedido): Observable<Documentos[]> {
+    return this.http.get<Documentos[]>(this.baseUrl+"/file/pedido/"+pedido.id+"/imagem");
   }
 
   finalizarPedido(pedido: Pedido): Observable<Pedido> {
